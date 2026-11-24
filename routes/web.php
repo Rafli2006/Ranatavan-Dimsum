@@ -1,7 +1,43 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KasirController;
 
+// Halaman utama
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+
+// Login
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])
+        ->name('login');
+
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.process');
+});
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
+
+// Halaman Admin
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])
+            ->name('dashboard');
+    });
+
+// Halaman Kasir
+Route::middleware(['auth', 'role:kasir'])
+    ->prefix('kasir')
+    ->name('kasir.')
+    ->group(function () {
+        Route::get('/dashboard', [KasirController::class, 'dashboard'])
+            ->name('dashboard');
+    });
