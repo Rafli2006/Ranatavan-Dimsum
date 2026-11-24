@@ -15,6 +15,7 @@ class StockHistory extends Model
 
     protected $fillable = [
         'product_id',
+        'product_size_id',
         'user_id',
         'type',
         'quantity',
@@ -35,6 +36,11 @@ class StockHistory extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function productSize()
+    {
+        return $this->belongsTo(ProductSize::class);
     }
 
     public function user()

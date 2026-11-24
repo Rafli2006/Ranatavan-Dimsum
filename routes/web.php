@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KasirController;
+use App\Http\Controllers\ProductController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])
             ->name('dashboard');
+        Route::resource('produk', ProductController::class)
+            ->except(['show'])
+            ->names('produk');
     });
 
 // Halaman Kasir
@@ -41,3 +45,6 @@ Route::middleware(['auth', 'role:kasir'])
         Route::get('/dashboard', [KasirController::class, 'dashboard'])
             ->name('dashboard');
     });
+
+
+
