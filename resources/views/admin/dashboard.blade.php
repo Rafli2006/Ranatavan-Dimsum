@@ -57,10 +57,11 @@
 
                 <p class="sidebar-heading mt-4">MANAJEMEN DATA</p>
 
-                <div class="sidebar-link disabled-menu">
-                    <span>♙</span> Data Kasir
-                    <small>Segera</small>
-                </div>
+                <a href="{{ route('admin.kasir.index') }}"
+                   class="sidebar-link">
+                    <span>📊</span> Data Kasir
+                </a>
+
 
                 <div class="sidebar-link disabled-menu">
                     <span>▦</span> Data Kategori
@@ -346,6 +347,23 @@
     }
 
     /* SIDEBAR */
+    .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    }
+
+    .sidebar a span {
+        white-space: nowrap;
+    }
+
+    .sidebar a i {
+        width: 20px;
+        min-width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
     .admin-sidebar {
         background: #70452c;
         min-height: calc(100vh - 70px);

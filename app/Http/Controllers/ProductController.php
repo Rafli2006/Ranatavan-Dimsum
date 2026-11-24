@@ -61,7 +61,7 @@ class ProductController extends Controller
             $product = Product::create([
                 'category_id' => $category->id,
                 'variant_id' => $variant->id,
-                'name' => 'Dimsum ' . $category->name . ' ' . $variant->name,
+                'name' => $category->name . ' ' . $variant->name,
                 'description' => $validated['description'] ?? null,
                 'price' => $lowestPrice,
                 'cost_price' => null,
@@ -129,7 +129,7 @@ class ProductController extends Controller
             $produk->update([
                 'category_id' => $category->id,
                 'variant_id' => $variant->id,
-                'name' => 'Dimsum ' . $category->name . ' ' . $variant->name,
+                'name' => $category->name . ' ' . $variant->name,
                 'description' => $validated['description'] ?? null,
                 'price' => $lowestPrice,
                 'stock' => $totalStock,

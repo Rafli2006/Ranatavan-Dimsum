@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\KasirManagementController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -35,6 +36,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('produk', ProductController::class)
             ->except(['show'])
             ->names('produk');
+        Route::resource('kasir', KasirManagementController::class)
+            ->except(['show'])
+            ->names('kasir');
+        Route::patch('/kasir/{id}/status', [KasirManagementController::class, 'toggleStatus'])
+            ->name('kasir.toggleStatus');
     });
 
 // Halaman Kasir

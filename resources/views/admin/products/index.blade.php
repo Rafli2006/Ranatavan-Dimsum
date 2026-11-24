@@ -6,18 +6,25 @@
 
 <div class="product-page">
 
-    {{-- HEADER --}}
-    <div class="product-header">
-        <div>
-            <span class="header-label">MANAJEMEN PRODUK</span>
-            <h2>Data Produk Dimsum</h2>
-            <p>Kelola produk, ukuran, harga, dan persediaan Ranatavan Dimsum.</p>
-        </div>
+   {{-- HEADER --}}
+<div class="product-header">
+    <div>
+        <span class="header-label">MANAJEMEN PRODUK</span>
+        <h2>Data Produk Dimsum</h2>
+        <p>Kelola produk, ukuran, harga, dan persediaan Ranatavan Dimsum.</p>
+    </div>
+
+    <div class="header-actions">
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-dashboard">
+            <i class="bi bi-arrow-left"></i>
+            Dashboard
+        </a>
 
         <a href="{{ route('admin.produk.create') }}" class="btn-add-product">
             <span>＋</span> Tambah Produk
         </a>
     </div>
+</div>
 
     {{-- NOTIFIKASI --}}
     @if(session('success'))
@@ -260,6 +267,40 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 28px;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-dashboard {
+        background-color: #fff;
+        color: #70452c;
+        border: 1px solid #d9c5b3;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-dashboard:hover {
+        background-color: #f4e9dd;
+        color: #54321f;
+    }
+
+    @media (max-width: 768px) {
+        .product-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .header-actions {
+            width: 100%;
+            flex-wrap: wrap;
+        }
     }
 
     .header-label {
