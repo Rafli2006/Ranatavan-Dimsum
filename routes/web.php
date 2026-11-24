@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\KasirManagementController;
+use App\Http\Controllers\TransaksiController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -48,9 +49,22 @@ Route::middleware(['auth', 'role:kasir'])
     ->prefix('kasir')
     ->name('kasir.')
     ->group(function () {
+
         Route::get('/dashboard', [KasirController::class, 'dashboard'])
             ->name('dashboard');
+
+        Route::get('/transaksi', [KasirController::class, 'transaksiBaru'])
+            ->name('transaksi');
+
     });
 
+
+#route transaksi controller
+  Route::middleware(['auth'])->group(function () {
+
+    Route::get('/transaksi', [TransaksiController::class, 'index'])
+        ->name('transaksi.index');
+
+});
 
 
