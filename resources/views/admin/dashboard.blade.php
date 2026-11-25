@@ -52,10 +52,9 @@
 
         <nav class="sidebar-menu">
 
-            <a href="#" class="sidebar-link disabled-link">
+            <a href="{{ route('admin.stok.index') }}" class="sidebar-link">
                 <i class="bi bi-boxes"></i>
                 <span>Manajemen Stok</span>
-                <small>Segera</small>
             </a>
 
             <a href="#" class="sidebar-link disabled-link">

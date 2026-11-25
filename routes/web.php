@@ -9,6 +9,7 @@ use App\Http\Controllers\KasirManagementController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariantController;
+use App\Http\Controllers\StockController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -45,6 +46,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('varian', VariantController::class)
             ->except(['show'])
             ->names('varian');
+        Route::get('/stok', [StockController::class, 'index'])
+            ->name('stok.index');
+        Route::post('/stok/update', [StockController::class, 'updateStock'])
+            ->name('stok.update');
         Route::resource('kasir', KasirManagementController::class)
             ->except(['show'])
             ->names('kasir');
