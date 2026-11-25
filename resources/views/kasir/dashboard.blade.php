@@ -22,21 +22,21 @@
         <nav class="sidebar-menu">
 
             <a href="{{ route('kasir.dashboard') }}"
-               class="sidebar-link active">
+               class="sidebar-link {{ request()->routeIs('kasir.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-1x2-fill"></i>
                 <span>Dashboard</span>
             </a>
 
-            <a href="#" class="sidebar-link disabled-link">
+            <a href="{{ route('kasir.transaksi') }}"
+               class="sidebar-link {{ request()->routeIs('kasir.transaksi') ? 'active' : '' }}">
                 <i class="bi bi-cart-plus"></i>
                 <span>Transaksi Baru</span>
-                <small>Segera</small>
             </a>
 
-            <a href="#" class="sidebar-link disabled-link">
+            <a href="{{ route('kasir.riwayat') }}"
+               class="sidebar-link {{ request()->routeIs('kasir.riwayat*') ? 'active' : '' }}">
                 <i class="bi bi-receipt"></i>
                 <span>Riwayat Penjualan</span>
-                <small>Segera</small>
             </a>
 
         </nav>
@@ -160,6 +160,40 @@
             </section>
 
 
+            {{-- RINGKASAN HARI INI --}}
+            <div class="cashier-stats-grid">
+                <div class="cashier-stat-card">
+                    <div class="stat-icon stat-orange">
+                        <i class="bi bi-bag-check"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">TRANSAKSI HARI INI</span>
+                        <h4>{{ $jumlahTransaksiHariIni ?? 0 }}</h4>
+                    </div>
+                </div>
+
+                <div class="cashier-stat-card">
+                    <div class="stat-icon stat-brown">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">PRODUK TERSEDIA</span>
+                        <h4>{{ $totalProdukTersedia ?? 0 }}</h4>
+                    </div>
+                </div>
+
+                <div class="cashier-stat-card">
+                    <div class="stat-icon stat-peach">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div>
+                        <span class="stat-label">TOTAL HARI INI</span>
+                        <h4>Rp {{ number_format($omzetHariIni ?? 0, 0, ',', '.') }}</h4>
+                    </div>
+                </div>
+            </div>
+
+
             {{-- SECTION HEADING --}}
             <div class="section-heading">
 
@@ -210,7 +244,8 @@
                         dengan mudah.
                     </p>
 
-                    <a href="#" class="cashier-menu-button primary-menu-button">
+                    <a href="{{ route('kasir.transaksi') }}"
+                       class="cashier-menu-button primary-menu-button">
                         <span>Mulai Transaksi</span>
                         <i class="bi bi-arrow-right"></i>
                     </a>
@@ -243,7 +278,8 @@
                         sebelumnya.
                     </p>
 
-                    <a href="#" class="cashier-menu-button secondary-menu-button">
+                    <a href="{{ route('kasir.riwayat') }}"
+                       class="cashier-menu-button secondary-menu-button">
                         <span>Lihat Riwayat</span>
                         <i class="bi bi-arrow-right"></i>
                     </a>
@@ -251,6 +287,51 @@
                 </div>
 
             </div>
+
+
+            {{-- TRANSAKSI TERBARU --}}
+            <section class="cashier-recent-box">
+                <div class="recent-header">
+                    <div>
+                        <span class="section-eyebrow">AKTIVITAS TERBARU</span>
+                        <h4>5 Transaksi Terakhir</h4>
+                    </div>
+                    <a href="{{ route('kasir.riwayat') }}" class="recent-link">
+                        Lihat Semua <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                @if(isset($transaksiTerbaru) && $transaksiTerbaru->count() > 0)
+                    <div class="table-responsive">
+                        <table class="cashier-table">
+                            <thead>
+                                <tr>
+                                    <th>Kode / ID</th>
+                                    <th>Waktu</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($transaksiTerbaru as $order)
+                                    @php
+                                        $kodeOrder = $order->kode_transaksi ?? $order->order_code ?? ('#' . $order->id);
+                                        $nominalOrder = $order->total_harga ?? $order->total ?? 0;
+                                    @endphp
+                                    <tr>
+                                        <td><strong>{{ $kodeOrder }}</strong></td>
+                                        <td>{{ $order->created_at ? $order->created_at->format('d/m/Y H:i') : '-' }}</td>
+                                        <td><strong>Rp {{ number_format($nominalOrder, 0, ',', '.') }}</strong></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="recent-empty">
+                        Belum ada transaksi tercatat. Klik <strong>Mulai Transaksi</strong> untuk membuat pesanan pertama.
+                    </div>
+                @endif
+            </section>
 
 
             {{-- INFORMATION --}}
@@ -266,7 +347,7 @@
                     <p>
                         Pastikan jumlah produk dan harga sudah sesuai
                         sebelum menyelesaikan transaksi. Stok produk
-                        akan diperbarui setelah pembayaran berhasil.
+                        akan diperbarui setelah transaksi berhasil.
                         Selalu periksa kembali pesanan pelanggan.
                     </p>
                 </div>
@@ -321,7 +402,6 @@
     color: var(--text);
     font-family: 'DM Sans', Arial, sans-serif;
 }
-
 
 /* SIDEBAR */
 
@@ -414,20 +494,6 @@
     box-shadow: 0 5px 12px rgba(232, 95, 24, .2);
 }
 
-.cashier-dashboard .disabled-link {
-    opacity: .55;
-    cursor: not-allowed;
-}
-
-.cashier-dashboard .disabled-link small {
-    margin-left: auto;
-    font-size: 9px;
-    background: #f4eee9;
-    padding: 3px 6px;
-    border-radius: 5px;
-}
-
-
 /* SIDEBAR INFORMATION */
 
 .cashier-dashboard .cashier-sidebar-note {
@@ -467,7 +533,6 @@
     line-height: 1.6;
     margin: 0;
 }
-
 
 /* PROFILE */
 
@@ -529,7 +594,6 @@
 .cashier-dashboard .logout-button:hover {
     background: #ffe4d2;
 }
-
 
 /* MAIN AREA */
 
@@ -596,7 +660,6 @@
     color: var(--muted);
 }
 
-
 /* CONTENT */
 
 .cashier-dashboard .dashboard-content {
@@ -604,7 +667,6 @@
     padding: 30px 36px;
     margin: auto;
 }
-
 
 /* WELCOME BANNER */
 
@@ -618,7 +680,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 35px;
+    margin-bottom: 26px;
 }
 
 .cashier-dashboard .welcome-content {
@@ -692,6 +754,67 @@
     filter: drop-shadow(0 8px 10px rgba(130,70,30,.12));
 }
 
+/* STATS GRID */
+
+.cashier-dashboard .cashier-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+}
+
+.cashier-dashboard .cashier-stat-card {
+    background: #fff;
+    border: 1px solid #f1e5dc;
+    border-radius: 15px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 5px 18px rgba(91, 54, 31, .035);
+}
+
+.cashier-dashboard .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    flex-shrink: 0;
+}
+
+.cashier-dashboard .stat-orange {
+    background: #fff0e3;
+    color: var(--orange-dark);
+}
+
+.cashier-dashboard .stat-brown {
+    background: #f6ebe3;
+    color: var(--brown);
+}
+
+.cashier-dashboard .stat-peach {
+    background: #fff5ed;
+    color: #c65b27;
+}
+
+.cashier-dashboard .stat-label {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.cashier-dashboard .cashier-stat-card h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--brown);
+}
 
 /* SECTION HEADING */
 
@@ -733,7 +856,6 @@
     color: var(--orange-dark);
     font-size: 19px;
 }
-
 
 /* MENU GRID */
 
@@ -850,6 +972,67 @@
     border-color: #f5d5bd;
 }
 
+/* RECENT ORDERS */
+
+.cashier-dashboard .cashier-recent-box {
+    background: #fff;
+    border: 1px solid #f1e5dc;
+    border-radius: 15px;
+    padding: 22px 24px;
+    margin-top: 26px;
+    box-shadow: 0 5px 18px rgba(91, 54, 31, .035);
+}
+
+.cashier-dashboard .recent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.cashier-dashboard .recent-header h4 {
+    margin: 4px 0 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--brown);
+}
+
+.cashier-dashboard .recent-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange-dark);
+    text-decoration: none;
+}
+
+.cashier-dashboard .cashier-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.cashier-dashboard .cashier-table th,
+.cashier-dashboard .cashier-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f3e9e2;
+    text-align: left;
+}
+
+.cashier-dashboard .cashier-table th {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.cashier-dashboard .recent-empty {
+    background: #fff9f4;
+    border: 1px dashed #eaded5;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+}
 
 /* INFORMATION */
 
@@ -863,7 +1046,7 @@
     border: 1px solid #ffe2c9;
     border-radius: 13px;
     padding: 20px;
-    margin-top: 28px;
+    margin-top: 24px;
 }
 
 .cashier-dashboard .information-icon {
@@ -907,7 +1090,6 @@
     font-size: 65px;
 }
 
-
 /* FOOTER */
 
 .cashier-dashboard .dashboard-footer {
@@ -921,14 +1103,16 @@
     font-size: 10px;
 }
 
-
 /* RESPONSIVE */
 
 @media (max-width: 1000px) {
-
     .cashier-dashboard .admin-sidebar {
         width: 225px;
         min-width: 225px;
+    }
+
+    .cashier-dashboard .cashier-stats-grid {
+        grid-template-columns: 1fr;
     }
 
     .cashier-dashboard .dashboard-content {
@@ -938,11 +1122,9 @@
     .cashier-dashboard .admin-topbar {
         padding: 15px 22px;
     }
-
 }
 
 @media (max-width: 700px) {
-
     .cashier-dashboard {
         flex-direction: column;
     }
@@ -1021,11 +1203,9 @@
         flex-direction: column;
         gap: 7px;
     }
-
 }
 
 @media (max-width: 420px) {
-
     .cashier-dashboard .welcome-decoration {
         display: none;
     }
@@ -1033,7 +1213,6 @@
     .cashier-dashboard .section-heading-icon {
         display: none;
     }
-
 }
 
 </style>
