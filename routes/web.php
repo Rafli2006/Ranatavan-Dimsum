@@ -7,6 +7,8 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\KasirManagementController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VariantController;
 
 // Halaman utama
 Route::get('/', function () {
@@ -37,6 +39,12 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('produk', ProductController::class)
             ->except(['show'])
             ->names('produk');
+        Route::resource('kategori', CategoryController::class)
+            ->except(['show'])
+            ->names('kategori');
+        Route::resource('varian', VariantController::class)
+            ->except(['show'])
+            ->names('varian');
         Route::resource('kasir', KasirManagementController::class)
             ->except(['show'])
             ->names('kasir');

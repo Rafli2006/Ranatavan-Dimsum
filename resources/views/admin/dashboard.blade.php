@@ -20,6 +20,7 @@
             </a>
 
             <div class="ms-auto d-flex align-items-center gap-3">
+
                 <div class="user-info text-end">
                     <span class="d-block text-white fw-semibold">
                         {{ Auth::user()->name }}
@@ -37,8 +38,8 @@
                         Keluar
                     </button>
                 </form>
-            </div>
 
+            </div>
         </div>
     </nav>
 
@@ -62,16 +63,16 @@
                     <span>📊</span> Data Kasir
                 </a>
 
-
-                <div class="sidebar-link disabled-menu">
+                <a href="{{ route('admin.kategori.index') }}"
+                   class="sidebar-link">
                     <span>▦</span> Data Kategori
-                    <small>Segera</small>
-                </div>
+                </a>
 
-                <div class="sidebar-link disabled-menu">
+                {{-- DATA VARIAN: SUDAH AKTIF --}}
+                <a href="{{ route('admin.varian.index') }}"
+                   class="sidebar-link">
                     <span>◇</span> Data Varian
-                    <small>Segera</small>
-                </div>
+                </a>
 
                 <a href="{{ route('admin.produk.index') }}"
                    class="sidebar-link">
@@ -105,14 +106,17 @@
 
             </aside>
 
-            {{-- KONTEN --}}
+            {{-- KONTEN UTAMA --}}
             <main class="col-md-9 col-lg-10 admin-content">
 
                 {{-- JUDUL HALAMAN --}}
                 <div class="page-heading">
+
                     <div>
                         <span class="eyebrow">OVERVIEW</span>
+
                         <h2>Dashboard Admin</h2>
+
                         <p>
                             Selamat datang, {{ Auth::user()->name }}!
                             Senang melihat Anda kembali.
@@ -123,10 +127,12 @@
                         <span>📅</span>
                         {{ now()->translatedFormat('d F Y') }}
                     </div>
+
                 </div>
 
                 {{-- WELCOME BANNER --}}
                 <div class="welcome-banner">
+
                     <div>
                         <span class="welcome-label">
                             ADMINISTRATOR PANEL
@@ -141,59 +147,74 @@
                     </div>
 
                     <div class="welcome-decoration">🥟</div>
+
                 </div>
 
                 {{-- STATISTIK --}}
                 <div class="section-heading">
+
                     <div>
                         <h5>Ringkasan Sistem</h5>
                         <p>Informasi umum pengelolaan toko</p>
                     </div>
+
                 </div>
 
                 <div class="row g-3">
 
                     <div class="col-sm-6 col-xl-3">
                         <div class="stat-card">
+
                             <div class="stat-icon icon-brown">🥟</div>
+
                             <div>
                                 <p>Total Produk</p>
                                 <h3>-</h3>
                                 <small>Produk terdaftar</small>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="col-sm-6 col-xl-3">
                         <div class="stat-card">
+
                             <div class="stat-icon icon-gold">▦</div>
+
                             <div>
                                 <p>Total Kategori</p>
                                 <h3>-</h3>
                                 <small>Kategori produk</small>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="col-sm-6 col-xl-3">
                         <div class="stat-card">
+
                             <div class="stat-icon icon-green">♙</div>
+
                             <div>
                                 <p>Total Kasir</p>
                                 <h3>-</h3>
                                 <small>Akun kasir terdaftar</small>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="col-sm-6 col-xl-3">
                         <div class="stat-card">
+
                             <div class="stat-icon icon-cream">▤</div>
+
                             <div>
                                 <p>Total Penjualan</p>
                                 <h3>-</h3>
                                 <small>Transaksi tercatat</small>
                             </div>
+
                         </div>
                     </div>
 
@@ -201,16 +222,19 @@
 
                 {{-- MENU CEPAT --}}
                 <div class="section-heading mt-4">
+
                     <div>
                         <h5>Akses Menu</h5>
                         <p>Pilih menu untuk mengelola sistem</p>
                     </div>
+
                 </div>
 
                 <div class="row g-3">
 
                     {{-- DATA PRODUK --}}
                     <div class="col-md-6 col-xl-3">
+
                         <a href="{{ route('admin.produk.index') }}"
                            class="quick-card text-decoration-none d-block">
 
@@ -225,53 +249,101 @@
                             <span class="quick-status">
                                 Buka menu produk →
                             </span>
+
                         </a>
+
                     </div>
 
-                    {{-- KATEGORI DAN VARIAN --}}
+                    {{-- DATA KATEGORI --}}
                     <div class="col-md-6 col-xl-3">
-                        <div class="quick-card">
+
+                        <a href="{{ route('admin.kategori.index') }}"
+                           class="quick-card text-decoration-none d-block">
+
                             <span class="quick-icon">▦</span>
-                            <h6>Kategori & Varian</h6>
+
+                            <h6>Data Kategori</h6>
+
                             <p>
-                                Atur kategori dan varian produk yang tersedia.
+                                Kelola kategori Dimsum Kukus, Goreng, dan Bakar.
                             </p>
+
                             <span class="quick-status">
-                                Segera tersedia
+                                Buka menu kategori →
                             </span>
-                        </div>
+
+                        </a>
+
                     </div>
 
-                    {{-- STOK --}}
+                    {{-- DATA VARIAN --}}
                     <div class="col-md-6 col-xl-3">
+
+                        <a href="{{ route('admin.varian.index') }}"
+                           class="quick-card text-decoration-none d-block">
+
+                            <span class="quick-icon">◇</span>
+
+                            <h6>Data Varian</h6>
+
+                            <p>
+                                Kelola varian Original, Mentai, Keju,
+                                dan varian lainnya.
+                            </p>
+
+                            <span class="quick-status">
+                                Buka menu varian →
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                    {{-- MANAJEMEN STOK --}}
+                    <div class="col-md-6 col-xl-3">
+
                         <div class="quick-card">
+
                             <span class="quick-icon">▤</span>
+
                             <h6>Manajemen Stok</h6>
+
                             <p>
                                 Pantau persediaan dan perubahan stok produk.
                             </p>
+
                             <span class="quick-status">
                                 Segera tersedia
                             </span>
+
                         </div>
+
                     </div>
 
                     {{-- LAPORAN --}}
                     <div class="col-md-6 col-xl-3">
+
                         <div class="quick-card">
+
                             <span class="quick-icon">▧</span>
+
                             <h6>Laporan</h6>
+
                             <p>
                                 Lihat informasi penjualan dan persediaan.
                             </p>
+
                             <span class="quick-status">
                                 Segera tersedia
                             </span>
+
                         </div>
+
                     </div>
 
                 </div>
 
+                {{-- FOOTER --}}
                 <div class="admin-footer">
                     © {{ date('Y') }} Ranatavan Dimsum · Admin Dashboard
                 </div>
@@ -347,23 +419,6 @@
     }
 
     /* SIDEBAR */
-    .sidebar a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    }
-
-    .sidebar a span {
-        white-space: nowrap;
-    }
-
-    .sidebar a i {
-        width: 20px;
-        min-width: 20px;
-        text-align: center;
-        font-size: 16px;
-    }
-
     .admin-sidebar {
         background: #70452c;
         min-height: calc(100vh - 70px);
