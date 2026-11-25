@@ -4,530 +4,1037 @@
 
 @section('content')
 
-<div class="cashier-page">
+<div class="admin-dashboard cashier-dashboard">
 
-    {{-- NAVBAR --}}
-    <nav class="navbar navbar-dark cashier-navbar">
-        <div class="container-fluid px-4">
+    {{-- SIDEBAR --}}
+    <aside class="admin-sidebar">
 
-            <a class="navbar-brand d-flex align-items-center gap-2"
-               href="{{ route('kasir.dashboard') }}">
-                <span class="cashier-logo">🥟</span>
-                <span>
-                    Ranatavan Dimsum
-                    <small class="d-block cashier-subtitle">CASHIER PANEL</small>
-                </span>
+        <div class="sidebar-brand">
+            <div class="brand-icon">🥟</div>
+            <div>
+                <h5>Ranatavan</h5>
+                <span>DIMSUM MANAGEMENT</span>
+            </div>
+        </div>
+
+        <div class="sidebar-label">MENU KASIR</div>
+
+        <nav class="sidebar-menu">
+
+            <a href="{{ route('kasir.dashboard') }}"
+               class="sidebar-link active">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
             </a>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <div class="cashier-user text-end">
-                    <span class="d-block text-white fw-semibold">
-                        {{ Auth::user()->name }}
-                    </span>
-                    <small class="text-light opacity-75">Kasir</small>
-                </div>
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-cart-plus"></i>
+                <span>Transaksi Baru</span>
+                <small>Segera</small>
+            </a>
 
-                <div class="cashier-avatar">
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-receipt"></i>
+                <span>Riwayat Penjualan</span>
+                <small>Segera</small>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-label mt-4">INFORMASI</div>
+
+        <div class="cashier-sidebar-note">
+            <div class="note-icon">
+                <i class="bi bi-cup-hot"></i>
+            </div>
+
+            <div>
+                <strong>Selamat Bekerja!</strong>
+                <p>
+                    Berikan pelayanan terbaik kepada pelanggan
+                    Ranatavan Dimsum.
+                </p>
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
 
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn cashier-logout">
-                        Keluar
-                    </button>
-                </form>
+                <div class="profile-info">
+                    <strong>{{ Auth::user()->name }}</strong>
+                    <span>Kasir</span>
+                </div>
             </div>
 
-        </div>
-    </nav>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
 
-    <div class="container-fluid">
-        <div class="row">
-
-            {{-- SIDEBAR --}}
-            <aside class="col-md-3 col-lg-2 cashier-sidebar">
-
-                <p class="cashier-menu-title">MENU KASIR</p>
-
-                <a href="{{ route('kasir.dashboard') }}"
-                   class="cashier-link active">
-                    <span>⌂</span> Dashboard
-                </a>
-
-                <a href="#" class="cashier-link">
-                    <span>▣</span> Transaksi Baru
-                </a>
-
-                <a href="#" class="cashier-link">
-                    <span>▤</span> Riwayat Penjualan
-                </a>
-
-                <div class="cashier-sidebar-note">
-                    <span>☕</span>
-                    <p class="fw-semibold mb-1">Selamat Bekerja!</p>
-                    <small>Berikan pelayanan terbaik kepada pelanggan.</small>
-                </div>
-
-            </aside>
-
-            {{-- KONTEN --}}
-            <main class="col-md-9 col-lg-10 cashier-content">
-
-                <div class="cashier-heading">
-                    <div>
-                        <span class="cashier-eyebrow">CASHIER OVERVIEW</span>
-                        <h2>Dashboard Kasir</h2>
-                        <p>
-                            Selamat datang, {{ Auth::user()->name }}!
-                            Siap melayani pelanggan hari ini?
-                        </p>
-                    </div>
-
-                    <div class="cashier-date">
-                        📅 {{ now()->translatedFormat('d F Y') }}
-                    </div>
-                </div>
-
-                {{-- BANNER --}}
-                <div class="cashier-banner">
-                    <div>
-                        <span class="cashier-banner-label">RANATAVAN DIMSUM</span>
-                        <h3>Selamat Bekerja!</h3>
-                        <p>
-                            Layani pelanggan dengan ramah dan pastikan
-                            setiap transaksi dicatat dengan benar.
-                        </p>
-                    </div>
-
-                    <div class="cashier-banner-icon">🥟</div>
-                </div>
-
-                {{-- MENU TRANSAKSI --}}
-                <div class="cashier-section-heading">
-                    <h5>Menu Kasir</h5>
-                    <p>Pilih aktivitas yang ingin dilakukan</p>
-                </div>
-
-                <div class="row g-4">
-
-                    <div class="col-lg-6">
-                        <div class="cashier-action-card">
-                            <div class="cashier-action-icon">🛒</div>
-
-                            <span class="cashier-action-label">PENJUALAN</span>
-
-                            <h4>Transaksi Baru</h4>
-
-                            <p>
-                                Buat pesanan pelanggan, pilih produk dimsum,
-                                tentukan jumlah pesanan, dan proses pembayaran.
-                            </p>
-
-                            <a href="#" class="btn cashier-primary-btn">
-                                Mulai Transaksi <span>→</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="cashier-action-card">
-                            <div class="cashier-action-icon">📋</div>
-
-                            <span class="cashier-action-label">DATA PENJUALAN</span>
-
-                            <h4>Riwayat Penjualan</h4>
-
-                            <p>
-                                Periksa transaksi yang telah dilakukan
-                                dan lihat informasi pesanan pelanggan.
-                            </p>
-
-                            <a href="#" class="btn cashier-secondary-btn">
-                                Lihat Riwayat <span>→</span>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- INFORMASI --}}
-                <div class="cashier-information">
-                    <div class="cashier-information-icon">ℹ</div>
-                    <div>
-                        <h6>Informasi Penting</h6>
-                        <p>
-                            Pastikan jumlah produk dan harga sudah sesuai
-                            sebelum menyelesaikan transaksi. Stok produk
-                            akan diperbarui setelah pembayaran berhasil.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="cashier-footer">
-                    © {{ date('Y') }} Ranatavan Dimsum · Cashier Dashboard
-                </div>
-
-            </main>
+                <button type="submit" class="logout-button">
+                    <i class="bi bi-box-arrow-left"></i>
+                    Keluar
+                </button>
+            </form>
 
         </div>
-    </div>
+
+    </aside>
+
+
+    {{-- MAIN CONTENT --}}
+    <main class="admin-main">
+
+        {{-- TOPBAR --}}
+        <header class="admin-topbar">
+
+            <div>
+                <div class="topbar-caption">
+                    RANATAVAN DIMSUM / CASHIER
+                </div>
+
+                <h5>Dashboard Kasir</h5>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="topbar-date">
+                    <i class="bi bi-calendar3"></i>
+                    {{ now()->translatedFormat('d F Y') }}
+                </div>
+
+                <div class="topbar-user">
+                    <div class="topbar-avatar">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+
+                    <div>
+                        <strong>{{ Auth::user()->name }}</strong>
+                        <span>Kasir</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        {{-- DASHBOARD CONTENT --}}
+        <div class="dashboard-content">
+
+            {{-- WELCOME BANNER --}}
+            <section class="cashier-welcome-banner">
+
+                <div class="welcome-content">
+
+                    <span class="welcome-tag">
+                        <i class="bi bi-stars"></i>
+                        CASHIER OVERVIEW
+                    </span>
+
+                    <h2>
+                        Selamat Datang,
+                        {{ Auth::user()->name }}!
+                    </h2>
+
+                    <p>
+                        Siap melayani pelanggan hari ini?
+                        Kelola pesanan dan berikan pelayanan terbaik
+                        bersama Ranatavan Dimsum.
+                    </p>
+
+                    <div class="welcome-date">
+                        <i class="bi bi-calendar-check"></i>
+                        {{ now()->translatedFormat('l, d F Y') }}
+                    </div>
+
+                </div>
+
+                <div class="welcome-decoration">
+                    <div class="decoration-circle"></div>
+                    <span>🥟</span>
+                </div>
+
+            </section>
+
+
+            {{-- SECTION HEADING --}}
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-eyebrow">
+                        AKTIVITAS KASIR
+                    </span>
+
+                    <h3>Menu Kasir</h3>
+
+                    <p>
+                        Pilih aktivitas yang ingin kamu lakukan.
+                    </p>
+                </div>
+
+                <div class="section-heading-icon">
+                    <i class="bi bi-grid"></i>
+                </div>
+
+            </div>
+
+
+            {{-- MENU CARDS --}}
+            <div class="cashier-menu-grid">
+
+                {{-- TRANSAKSI BARU --}}
+                <div class="cashier-menu-card">
+
+                    <div class="menu-card-top">
+
+                        <div class="menu-card-icon transaction-icon">
+                            <i class="bi bi-cart-plus"></i>
+                        </div>
+
+                        <span class="menu-card-number">01</span>
+
+                    </div>
+
+                    <span class="menu-card-label">
+                        PENJUALAN
+                    </span>
+
+                    <h4>Transaksi Baru</h4>
+
+                    <p>
+                        Buat pesanan pelanggan, pilih produk dimsum,
+                        tentukan jumlah pesanan, dan proses pembayaran
+                        dengan mudah.
+                    </p>
+
+                    <a href="#" class="cashier-menu-button primary-menu-button">
+                        <span>Mulai Transaksi</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                {{-- RIWAYAT PENJUALAN --}}
+                <div class="cashier-menu-card">
+
+                    <div class="menu-card-top">
+
+                        <div class="menu-card-icon history-icon">
+                            <i class="bi bi-receipt-cutoff"></i>
+                        </div>
+
+                        <span class="menu-card-number">02</span>
+
+                    </div>
+
+                    <span class="menu-card-label">
+                        DATA PENJUALAN
+                    </span>
+
+                    <h4>Riwayat Penjualan</h4>
+
+                    <p>
+                        Periksa transaksi yang telah dilakukan
+                        dan lihat informasi pesanan pelanggan
+                        sebelumnya.
+                    </p>
+
+                    <a href="#" class="cashier-menu-button secondary-menu-button">
+                        <span>Lihat Riwayat</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {{-- INFORMATION --}}
+            <section class="cashier-information">
+
+                <div class="information-icon">
+                    <i class="bi bi-info-lg"></i>
+                </div>
+
+                <div class="information-content">
+                    <h5>Informasi Penting</h5>
+
+                    <p>
+                        Pastikan jumlah produk dan harga sudah sesuai
+                        sebelum menyelesaikan transaksi. Stok produk
+                        akan diperbarui setelah pembayaran berhasil.
+                        Selalu periksa kembali pesanan pelanggan.
+                    </p>
+                </div>
+
+                <div class="information-decoration">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+            </section>
+
+
+            {{-- FOOTER --}}
+            <footer class="dashboard-footer">
+                <span>
+                    © {{ date('Y') }} Ranatavan Dimsum
+                </span>
+
+                <span>
+                    Cashier Management System
+                </span>
+            </footer>
+
+        </div>
+
+    </main>
+
 </div>
 
 @endsection
 
+
 @push('styles')
 <style>
-    .cashier-page {
-        min-height: 100vh;
-        background: #f8f5f0;
+
+/* ==========================================
+   RANATAVAN DIMSUM - CASHIER DASHBOARD
+   MODERN ORANGE & WHITE
+========================================== */
+
+.cashier-dashboard {
+    --orange: #f07828;
+    --orange-dark: #d95d16;
+    --orange-light: #ff9d52;
+    --peach: #fff1e5;
+    --brown: #713d25;
+    --text: #38271f;
+    --muted: #9b8980;
+
+    display: flex;
+    min-height: 100vh;
+    background: #fff9f4;
+    color: var(--text);
+    font-family: 'DM Sans', Arial, sans-serif;
+}
+
+
+/* SIDEBAR */
+
+.cashier-dashboard .admin-sidebar {
+    width: 258px;
+    min-width: 258px;
+    min-height: 100vh;
+    background: #fff;
+    border-right: 1px solid #f4e5d9;
+    padding: 27px 17px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cashier-dashboard .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 9px;
+    margin-bottom: 42px;
+}
+
+.cashier-dashboard .brand-icon {
+    width: 47px;
+    height: 47px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ff9d52, #e85f18);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    box-shadow: 0 6px 15px rgba(240, 120, 40, .2);
+}
+
+.cashier-dashboard .sidebar-brand h5 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--brown);
+    margin: 0;
+}
+
+.cashier-dashboard .sidebar-brand span {
+    font-size: 9px;
+    letter-spacing: 1.3px;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.cashier-dashboard .sidebar-label {
+    color: #b4a49b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 0 12px;
+    margin-bottom: 12px;
+}
+
+.cashier-dashboard .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cashier-dashboard .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 45px;
+    padding: 0 13px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #79675e;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.cashier-dashboard .sidebar-link i {
+    font-size: 17px;
+}
+
+.cashier-dashboard .sidebar-link:hover {
+    color: var(--orange-dark);
+    background: #fff5ed;
+}
+
+.cashier-dashboard .sidebar-link.active {
+    color: #fff;
+    background: linear-gradient(120deg, #f58b3e, #e96620);
+    box-shadow: 0 5px 12px rgba(232, 95, 24, .2);
+}
+
+.cashier-dashboard .disabled-link {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.cashier-dashboard .disabled-link small {
+    margin-left: auto;
+    font-size: 9px;
+    background: #f4eee9;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+
+/* SIDEBAR INFORMATION */
+
+.cashier-dashboard .cashier-sidebar-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    background: #fff5ed;
+    border: 1px solid #ffe5d3;
+    border-radius: 12px;
+    padding: 15px 12px;
+    margin: 5px 4px 0;
+}
+
+.cashier-dashboard .note-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: #ffe4d0;
+    color: var(--orange-dark);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+.cashier-dashboard .cashier-sidebar-note strong {
+    display: block;
+    font-size: 11px;
+    color: var(--brown);
+    margin-bottom: 5px;
+}
+
+.cashier-dashboard .cashier-sidebar-note p {
+    color: #9b8274;
+    font-size: 10px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* PROFILE */
+
+.cashier-dashboard .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.cashier-dashboard .sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 8px;
+    border-top: 1px solid #f3e9e2;
+}
+
+.cashier-dashboard .profile-avatar,
+.cashier-dashboard .topbar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--peach);
+    color: var(--orange-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+}
+
+.cashier-dashboard .profile-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cashier-dashboard .profile-info strong {
+    font-size: 12px;
+    color: var(--brown);
+}
+
+.cashier-dashboard .profile-info span {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.cashier-dashboard .logout-button {
+    width: 100%;
+    border: 0;
+    background: #fff3eb;
+    color: #c65b27;
+    border-radius: 9px;
+    padding: 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.cashier-dashboard .logout-button:hover {
+    background: #ffe4d2;
+}
+
+
+/* MAIN AREA */
+
+.cashier-dashboard .admin-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.cashier-dashboard .admin-topbar {
+    min-height: 83px;
+    background: #fff;
+    border-bottom: 1px solid #f4e5d9;
+    padding: 15px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cashier-dashboard .topbar-caption {
+    font-size: 9px;
+    color: #b19b8e;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+}
+
+.cashier-dashboard .admin-topbar h5 {
+    color: var(--brown);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.cashier-dashboard .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.cashier-dashboard .topbar-date {
+    color: #88766d;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cashier-dashboard .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cashier-dashboard .topbar-user strong {
+    display: block;
+    font-size: 12px;
+    color: var(--brown);
+}
+
+.cashier-dashboard .topbar-user span {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+
+/* CONTENT */
+
+.cashier-dashboard .dashboard-content {
+    max-width: 1600px;
+    padding: 30px 36px;
+    margin: auto;
+}
+
+
+/* WELCOME BANNER */
+
+.cashier-dashboard .cashier-welcome-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 215px;
+    padding: 32px 38px;
+    border-radius: 18px;
+    background: linear-gradient(115deg, #fff0e3, #ffe1c8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+
+.cashier-dashboard .welcome-content {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+}
+
+.cashier-dashboard .welcome-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #d96524;
+    background: rgba(255,255,255,.7);
+    border: 1px solid rgba(240,120,40,.12);
+    border-radius: 30px;
+    padding: 7px 12px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.cashier-dashboard .cashier-welcome-banner h2 {
+    color: var(--brown);
+    font-size: 29px;
+    font-weight: 800;
+    margin: 16px 0 9px;
+}
+
+.cashier-dashboard .cashier-welcome-banner p {
+    color: #95766a;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 0;
+    max-width: 560px;
+}
+
+.cashier-dashboard .welcome-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #b36a3d;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 17px;
+}
+
+.cashier-dashboard .welcome-decoration {
+    position: relative;
+    width: 190px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cashier-dashboard .decoration-circle {
+    position: absolute;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.55);
+}
+
+.cashier-dashboard .welcome-decoration span {
+    position: relative;
+    z-index: 1;
+    font-size: 95px;
+    transform: rotate(-12deg);
+    filter: drop-shadow(0 8px 10px rgba(130,70,30,.12));
+}
+
+
+/* SECTION HEADING */
+
+.cashier-dashboard .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cashier-dashboard .section-eyebrow {
+    color: var(--orange);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.cashier-dashboard .section-heading h3 {
+    color: var(--brown);
+    font-size: 21px;
+    font-weight: 800;
+    margin: 5px 0;
+}
+
+.cashier-dashboard .section-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+.cashier-dashboard .section-heading-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff0e3;
+    color: var(--orange-dark);
+    font-size: 19px;
+}
+
+
+/* MENU GRID */
+
+.cashier-dashboard .cashier-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.cashier-dashboard .cashier-menu-card {
+    background: #fff;
+    border: 1px solid #f1e5dc;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(91, 54, 31, .035);
+    transition: .25s;
+}
+
+.cashier-dashboard .cashier-menu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(91, 54, 31, .09);
+    border-color: #f5d5bd;
+}
+
+.cashier-dashboard .menu-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cashier-dashboard .menu-card-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.cashier-dashboard .transaction-icon {
+    background: #fff0e3;
+    color: #e66e27;
+}
+
+.cashier-dashboard .history-icon {
+    background: #fff4e8;
+    color: #bc7940;
+}
+
+.cashier-dashboard .menu-card-number {
+    font-size: 25px;
+    font-weight: 800;
+    color: #f1e7df;
+}
+
+.cashier-dashboard .menu-card-label {
+    color: #b27c59;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.cashier-dashboard .cashier-menu-card h4 {
+    color: var(--brown);
+    font-size: 20px;
+    font-weight: 800;
+    margin: 9px 0;
+}
+
+.cashier-dashboard .cashier-menu-card p {
+    color: #968a80;
+    font-size: 12px;
+    line-height: 1.8;
+    min-height: 65px;
+    margin-bottom: 22px;
+}
+
+.cashier-dashboard .cashier-menu-button {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 15px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.cashier-dashboard .primary-menu-button {
+    color: #fff;
+    background: linear-gradient(120deg, #f58b3e, #e96620);
+    box-shadow: 0 5px 12px rgba(232,95,24,.15);
+}
+
+.cashier-dashboard .primary-menu-button:hover {
+    color: #fff;
+    background: linear-gradient(120deg, #e9772b, #d95512);
+}
+
+.cashier-dashboard .secondary-menu-button {
+    color: var(--brown);
+    background: #fff;
+    border: 1px solid #eaded5;
+}
+
+.cashier-dashboard .secondary-menu-button:hover {
+    color: var(--orange-dark);
+    background: #fff5ed;
+    border-color: #f5d5bd;
+}
+
+
+/* INFORMATION */
+
+.cashier-dashboard .cashier-information {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: #fff4e9;
+    border: 1px solid #ffe2c9;
+    border-radius: 13px;
+    padding: 20px;
+    margin-top: 28px;
+}
+
+.cashier-dashboard .information-icon {
+    width: 37px;
+    height: 37px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: #ffe4d0;
+    color: var(--orange-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.cashier-dashboard .information-content {
+    position: relative;
+    z-index: 1;
+}
+
+.cashier-dashboard .information-content h5 {
+    color: var(--brown);
+    font-size: 13px;
+    font-weight: 800;
+    margin: 2px 0 7px;
+}
+
+.cashier-dashboard .information-content p {
+    color: #957b6d;
+    font-size: 11px;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.cashier-dashboard .information-decoration {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(240,120,40,.12);
+    font-size: 65px;
+}
+
+
+/* FOOTER */
+
+.cashier-dashboard .dashboard-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    border-top: 1px solid #f0e5dc;
+    padding-top: 20px;
+    margin-top: 40px;
+    color: #a7958a;
+    font-size: 10px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .cashier-dashboard .admin-sidebar {
+        width: 225px;
+        min-width: 225px;
     }
 
-    .cashier-navbar {
-        min-height: 70px;
-        background: #563522;
-        box-shadow: 0 3px 12px rgba(50,30,15,.12);
+    .cashier-dashboard .dashboard-content {
+        padding: 25px 22px;
     }
 
-    .cashier-logo {
-        width: 40px;
-        height: 40px;
+    .cashier-dashboard .admin-topbar {
+        padding: 15px 22px;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .cashier-dashboard {
+        flex-direction: column;
+    }
+
+    .cashier-dashboard .admin-sidebar {
+        width: 100%;
+        min-width: 100%;
+        min-height: auto;
+        padding: 17px;
+    }
+
+    .cashier-dashboard .sidebar-brand {
+        margin-bottom: 20px;
+    }
+
+    .cashier-dashboard .sidebar-menu {
         display: grid;
-        place-items: center;
-        background: rgba(255,255,255,.13);
-        border-radius: 12px;
-        font-size: 22px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .cashier-navbar .navbar-brand {
-        font-size: 16px;
-        line-height: 1.2;
+    .cashier-dashboard .sidebar-bottom {
+        margin-top: 15px;
     }
 
-    .cashier-subtitle {
-        color: #dfbd9a;
-        font-size: 9px;
-        letter-spacing: 2px;
-        margin-top: 4px;
+    .cashier-dashboard .admin-topbar {
+        padding: 15px;
     }
 
-    .cashier-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: #d9b58e;
-        color: #563522;
-        display: grid;
-        place-items: center;
-        font-weight: bold;
+    .cashier-dashboard .topbar-date {
+        display: none;
     }
 
-    .cashier-logout {
-        background: #fff7ec;
-        color: #70452c;
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 8px 14px;
+    .cashier-dashboard .dashboard-content {
+        padding: 18px 14px;
     }
 
-    .cashier-logout:hover {
-        background: #e9d6c1;
-        color: #563522;
+    .cashier-dashboard .cashier-welcome-banner {
+        padding: 25px 20px;
+        min-height: 190px;
     }
 
-    .cashier-sidebar {
-        background: #70452c;
-        min-height: calc(100vh - 70px);
-        padding: 28px 16px;
+    .cashier-dashboard .cashier-welcome-banner h2 {
+        font-size: 23px;
     }
 
-    .cashier-menu-title {
-        color: #d9b99a;
-        font-size: 10px;
-        letter-spacing: 1.5px;
-        font-weight: bold;
-        padding: 0 10px;
-        margin-bottom: 13px;
-    }
-
-    .cashier-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 13px 12px;
-        color: #f8eee4;
-        text-decoration: none;
-        border-radius: 9px;
-        font-size: 13px;
-        margin-bottom: 6px;
-        transition: .2s;
-    }
-
-    .cashier-link span {
-        width: 22px;
-        text-align: center;
-        font-size: 17px;
-    }
-
-    .cashier-link:hover,
-    .cashier-link.active {
-        background: #946747;
-        color: white;
-    }
-
-    .cashier-sidebar-note {
-        background: rgba(255,255,255,.09);
-        border-radius: 12px;
-        color: white;
-        padding: 16px;
-        margin-top: 45px;
+    .cashier-dashboard .cashier-welcome-banner p {
         font-size: 12px;
     }
 
-    .cashier-sidebar-note > span {
-        font-size: 24px;
+    .cashier-dashboard .welcome-decoration {
+        width: 85px;
     }
 
-    .cashier-sidebar-note small {
-        color: #e0c7ae;
-        font-size: 10px;
-        line-height: 1.6;
+    .cashier-dashboard .welcome-decoration span {
+        font-size: 58px;
     }
 
-    .cashier-content {
-        padding: 30px;
+    .cashier-dashboard .decoration-circle {
+        width: 85px;
+        height: 85px;
     }
 
-    .cashier-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 25px;
+    .cashier-dashboard .cashier-menu-grid {
+        grid-template-columns: 1fr;
     }
 
-    .cashier-eyebrow {
-        color: #a47c59;
-        font-size: 10px;
-        letter-spacing: 2px;
-        font-weight: bold;
+    .cashier-dashboard .cashier-menu-card p {
+        min-height: auto;
     }
 
-    .cashier-heading h2 {
-        color: #563522;
-        font-weight: 800;
-        font-size: 27px;
-        margin: 6px 0;
+    .cashier-dashboard .topbar-user {
+        display: none;
     }
 
-    .cashier-heading p {
-        color: #96887d;
-        font-size: 13px;
-        margin: 0;
+    .cashier-dashboard .dashboard-footer {
+        flex-direction: column;
+        gap: 7px;
     }
 
-    .cashier-date {
-        background: white;
-        border: 1px solid #eee3d7;
-        border-radius: 10px;
-        padding: 10px 14px;
-        color: #70452c;
-        font-size: 12px;
+}
+
+@media (max-width: 420px) {
+
+    .cashier-dashboard .welcome-decoration {
+        display: none;
     }
 
-    .cashier-banner {
-        background: linear-gradient(120deg, #805337, #563522);
-        border-radius: 16px;
-        padding: 30px 32px;
-        color: white;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 32px;
+    .cashier-dashboard .section-heading-icon {
+        display: none;
     }
 
-    .cashier-banner-label {
-        color: #e9c69e;
-        font-size: 10px;
-        font-weight: bold;
-        letter-spacing: 2px;
-    }
+}
 
-    .cashier-banner h3 {
-        font-size: 26px;
-        font-weight: 800;
-        margin: 10px 0;
-    }
-
-    .cashier-banner p {
-        color: #ead9c8;
-        font-size: 13px;
-        margin: 0;
-        line-height: 1.7;
-    }
-
-    .cashier-banner-icon {
-        font-size: 85px;
-        padding: 0 25px;
-    }
-
-    .cashier-section-heading {
-        margin-bottom: 17px;
-    }
-
-    .cashier-section-heading h5 {
-        color: #563522;
-        font-weight: 800;
-        margin-bottom: 4px;
-    }
-
-    .cashier-section-heading p {
-        color: #a09287;
-        font-size: 12px;
-    }
-
-    .cashier-action-card {
-        height: 100%;
-        background: white;
-        border: 1px solid #f0e8df;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(75,46,27,.04);
-        transition: .2s;
-    }
-
-    .cashier-action-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 9px 22px rgba(75,46,27,.09);
-    }
-
-    .cashier-action-icon {
-        width: 55px;
-        height: 55px;
-        display: grid;
-        place-items: center;
-        background: #f4e9dd;
-        border-radius: 14px;
-        font-size: 27px;
-        margin-bottom: 18px;
-    }
-
-    .cashier-action-label {
-        color: #a47c59;
-        font-size: 10px;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-    }
-
-    .cashier-action-card h4 {
-        color: #563522;
-        font-size: 21px;
-        font-weight: 800;
-        margin: 9px 0;
-    }
-
-    .cashier-action-card p {
-        color: #968a80;
-        font-size: 12px;
-        line-height: 1.8;
-        min-height: 65px;
-    }
-
-    .cashier-primary-btn,
-    .cashier-secondary-btn {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 15px;
-        border-radius: 9px;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .cashier-primary-btn {
-        background: #70452c;
-        color: white;
-    }
-
-    .cashier-primary-btn:hover {
-        background: #563522;
-        color: white;
-    }
-
-    .cashier-secondary-btn {
-        border: 1px solid #d9c7b5;
-        color: #70452c;
-    }
-
-    .cashier-secondary-btn:hover {
-        background: #f4e9dd;
-        color: #563522;
-    }
-
-    .cashier-information {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-        background: #f1e7da;
-        border: 1px solid #e6d5c2;
-        border-radius: 13px;
-        padding: 20px;
-        margin-top: 28px;
-    }
-
-    .cashier-information-icon {
-        width: 35px;
-        height: 35px;
-        flex-shrink: 0;
-        background: #70452c;
-        color: white;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        font-weight: bold;
-    }
-
-    .cashier-information h6 {
-        color: #563522;
-        font-weight: bold;
-    }
-
-    .cashier-information p {
-        color: #816b59;
-        font-size: 12px;
-        line-height: 1.7;
-        margin: 0;
-    }
-
-    .cashier-footer {
-        text-align: center;
-        color: #aa9c90;
-        font-size: 11px;
-        padding: 30px 0 5px;
-    }
-
-    @media (max-width: 767px) {
-        .cashier-sidebar {
-            min-height: auto;
-        }
-
-        .cashier-content {
-            padding: 20px 15px;
-        }
-
-        .cashier-heading {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .cashier-banner-icon {
-            display: none;
-        }
-
-        .cashier-user {
-            display: none;
-        }
-    }
 </style>
 @endpush

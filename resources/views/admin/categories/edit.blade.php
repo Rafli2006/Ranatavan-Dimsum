@@ -4,161 +4,199 @@
 
 @section('content')
 
-<div class="category-page">
+<div class="admin-dashboard category-form-page">
 
-    {{-- NAVBAR --}}
-    <nav class="navbar navbar-dark category-navbar">
-        <div class="container-fluid px-4">
+    {{-- SIDEBAR --}}
+    <aside class="admin-sidebar">
 
-            <a href="{{ route('admin.dashboard') }}"
-               class="navbar-brand d-flex align-items-center gap-2">
-                <span class="brand-logo">🥟</span>
-                <span>
-                    Ranatavan Dimsum
-                    <small class="d-block brand-subtitle">ADMIN PANEL</small>
-                </span>
+        <div class="sidebar-brand">
+            <div class="brand-icon">🥟</div>
+            <div>
+                <h5>Ranatavan</h5>
+                <span>DIMSUM MANAGEMENT</span>
+            </div>
+        </div>
+
+        <div class="sidebar-label">MENU UTAMA</div>
+
+        <nav class="sidebar-menu">
+            <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
             </a>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
+            <a href="{{ route('admin.kasir.index') }}" class="sidebar-link">
+                <i class="bi bi-people"></i>
+                <span>Data Kasir</span>
+            </a>
 
-                <div class="user-info text-end">
-                    <span class="d-block text-white fw-semibold">
-                        {{ Auth::user()->name }}
-                    </span>
-                    <small class="text-light opacity-75">Administrator</small>
-                </div>
+            <a href="{{ route('admin.kategori.index') }}" class="sidebar-link active">
+                <i class="bi bi-tags"></i>
+                <span>Data Kategori</span>
+            </a>
 
-                <div class="user-avatar">
+            <a href="{{ route('admin.varian.index') }}" class="sidebar-link">
+                <i class="bi bi-grid"></i>
+                <span>Data Varian</span>
+            </a>
+
+            <a href="{{ route('admin.produk.index') }}" class="sidebar-link">
+                <i class="bi bi-box-seam"></i>
+                <span>Data Produk</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-label mt-4">LAINNYA</div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-boxes"></i>
+                <span>Manajemen Stok</span>
+                <small>Segera</small>
+            </a>
+
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-receipt"></i>
+                <span>Laporan Penjualan</span>
+                <small>Segera</small>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
 
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-logout">
-                        Keluar
-                    </button>
-                </form>
-
+                <div class="profile-info">
+                    <strong>{{ Auth::user()->name }}</strong>
+                    <span>Administrator</span>
+                </div>
             </div>
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-button">
+                    <i class="bi bi-box-arrow-left"></i>
+                    Keluar
+                </button>
+            </form>
+
         </div>
-    </nav>
+    </aside>
 
-    <div class="container-fluid">
-        <div class="row">
+    {{-- MAIN --}}
+    <main class="admin-main">
 
-            {{-- SIDEBAR --}}
-            <aside class="col-md-3 col-lg-2 category-sidebar">
+        {{-- TOPBAR --}}
+        <header class="admin-topbar">
+            <div>
+                <div class="topbar-caption">RANATAVAN DIMSUM / ADMIN</div>
+                <h5>Edit Kategori</h5>
+            </div>
 
-                <p class="sidebar-heading">MENU UTAMA</p>
-
-                <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
-                    <span>⌂</span> Dashboard
-                </a>
-
-                <p class="sidebar-heading mt-4">MANAJEMEN DATA</p>
-
-                <a href="{{ route('admin.kasir.index') }}" class="sidebar-link">
-                    <span>📊</span> Data Kasir
-                </a>
-
-                <a href="{{ route('admin.kategori.index') }}" class="sidebar-link active">
-                    <span>▦</span> Data Kategori
-                </a>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>◇</span> Data Varian
-                    <small>Segera</small>
+            <div class="topbar-right">
+                <div class="topbar-date">
+                    <i class="bi bi-calendar3"></i>
+                    {{ now()->translatedFormat('d F Y') }}
                 </div>
 
-                <a href="{{ route('admin.produk.index') }}" class="sidebar-link">
-                    <span>🥟</span> Data Produk
-                </a>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▤</span> Manajemen Stok
-                    <small>Segera</small>
-                </div>
-
-                <p class="sidebar-heading mt-4">LAPORAN</p>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▧</span> Laporan Penjualan
-                    <small>Segera</small>
-                </div>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▤</span> Laporan Stok
-                    <small>Segera</small>
-                </div>
-
-                <div class="sidebar-bottom">
-                    <div class="sidebar-note">
-                        <span>🥟</span>
-                        <p class="mb-1 fw-semibold">Ranatavan Dimsum</p>
-                        <small>Sistem Manajemen Penjualan</small>
+                <div class="topbar-user">
+                    <div class="topbar-avatar">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
-                </div>
-
-            </aside>
-
-            {{-- KONTEN UTAMA --}}
-            <main class="col-md-9 col-lg-10 category-content">
-
-                {{-- HEADER --}}
-                <div class="page-heading">
-
                     <div>
-                        <span class="eyebrow">MANAJEMEN DATA</span>
-                        <h2>Edit Kategori</h2>
-                        <p>Perbarui informasi kategori produk.</p>
+                        <strong>{{ Auth::user()->name }}</strong>
+                        <span>Administrator</span>
                     </div>
+                </div>
+            </div>
+        </header>
 
-                    <a href="{{ route('admin.kategori.index') }}"
-                       class="btn btn-back">
-                        ← Kembali
-                    </a>
+        {{-- CONTENT --}}
+        <div class="dashboard-content">
 
+            {{-- BREADCRUMB --}}
+            <div class="breadcrumb-custom">
+                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <i class="bi bi-chevron-right"></i>
+                <a href="{{ route('admin.kategori.index') }}">Data Kategori</a>
+                <i class="bi bi-chevron-right"></i>
+                <span>Edit Kategori</span>
+            </div>
+
+            {{-- BANNER --}}
+            <section class="form-banner">
+                <div class="form-banner-content">
+                    <span class="form-tag">
+                        <i class="bi bi-pencil-square"></i>
+                        MANAJEMEN DATA
+                    </span>
+
+                    <h1>Edit Kategori</h1>
+
+                    <p>
+                        Perbarui informasi kategori produk
+                        Ranatavan Dimsum.
+                    </p>
                 </div>
 
-                {{-- FORM EDIT --}}
-                <div class="category-form-wrapper">
+                <div class="form-banner-decoration">✏️</div>
 
-                    <div class="form-card">
+                <a href="{{ route('admin.kategori.index') }}" class="back-button">
+                    <i class="bi bi-arrow-left"></i>
+                    Kembali
+                </a>
+            </section>
 
-                        <div class="form-heading">
-                            <div class="form-icon">✎</div>
+            {{-- ERRORS --}}
+            @if($errors->any())
+                <div class="alert alert-danger form-alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <div>
+                        <strong>Periksa kembali data yang dimasukkan.</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
 
-                            <div>
-                                <h5>Informasi Kategori</h5>
-                                <p>Ubah informasi kategori sesuai kebutuhan.</p>
-                            </div>
+            {{-- FORM LAYOUT --}}
+            <div class="form-layout">
+
+                <section class="form-card">
+
+                    <div class="form-card-heading">
+                        <div class="form-heading-icon">
+                            <i class="bi bi-pencil-square"></i>
                         </div>
 
-                        {{-- ERROR VALIDASI --}}
-                        @if($errors->any())
-                            <div class="alert alert-danger">
-                                <strong>Terjadi kesalahan!</strong>
-                                <ul class="mb-0 mt-2">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                        <div>
+                            <h5>Informasi Kategori</h5>
+                            <p>Perbarui informasi kategori sesuai kebutuhan.</p>
+                        </div>
+                    </div>
 
-                        <form action="{{ route('admin.kategori.update', $kategori->id) }}"
-                              method="POST">
+                    <form action="{{ route('admin.kategori.update', $kategori->id) }}"
+                          method="POST">
 
-                            @csrf
-                            @method('PUT')
+                        @csrf
+                        @method('PUT')
 
-                            {{-- NAMA KATEGORI --}}
-                            <div class="form-group-custom">
+                        {{-- NAMA --}}
+                        <div class="form-group-custom">
 
-                                <label for="name" class="form-label">
-                                    Nama Kategori
-                                    <span class="text-danger">*</span>
-                                </label>
+                            <label for="name" class="form-label">
+                                Nama Kategori
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-tag"></i>
 
                                 <input
                                     type="text"
@@ -170,25 +208,29 @@
                                     maxlength="100"
                                     required
                                 >
-
-                                @error('name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-
-                                <small class="form-text">
-                                    Masukkan nama kategori produk.
-                                </small>
-
                             </div>
 
-                            {{-- DESKRIPSI --}}
-                            <div class="form-group-custom">
+                            @error('name')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                                <label for="description" class="form-label">
-                                    Deskripsi Kategori
-                                </label>
+                            <small class="form-help">
+                                Masukkan nama kategori produk.
+                            </small>
+                        </div>
+
+                        {{-- DESKRIPSI --}}
+                        <div class="form-group-custom">
+
+                            <label for="description" class="form-label">
+                                Deskripsi Kategori
+                                <span class="optional-mark">Opsional</span>
+                            </label>
+
+                            <div class="textarea-icon-wrapper">
+                                <i class="bi bi-card-text"></i>
 
                                 <textarea
                                     name="description"
@@ -197,437 +239,775 @@
                                     rows="5"
                                     placeholder="Tuliskan deskripsi kategori produk..."
                                 >{{ old('description', $kategori->description) }}</textarea>
-
-                                @error('description')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-
-                                <small class="form-text">
-                                    Perbarui deskripsi kategori. Bagian ini opsional.
-                                </small>
-
                             </div>
 
-                            {{-- TOMBOL --}}
-                            <div class="form-actions">
+                            @error('description')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                                <a href="{{ route('admin.kategori.index') }}"
-                                   class="btn btn-cancel">
-                                    Batal
-                                </a>
-
-                                <button type="submit" class="btn btn-save">
-                                    Simpan Perubahan
-                                </button>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-                    {{-- INFORMASI --}}
-                    <div class="info-card">
-                        <span class="info-icon">💡</span>
-
-                        <div>
-                            <strong>Informasi</strong>
-                            <p>
-                                Perubahan kategori akan disimpan ke database.
-                                Pastikan kategori yang diubah sudah sesuai dengan
-                                produk yang menggunakannya.
-                            </p>
+                            <small class="form-help">
+                                Perbarui deskripsi kategori. Bagian ini opsional.
+                            </small>
                         </div>
+
+                        {{-- ACTIONS --}}
+                        <div class="form-actions">
+
+                            <a href="{{ route('admin.kategori.index') }}" class="cancel-button">
+                                <i class="bi bi-x-lg"></i>
+                                Batal
+                            </a>
+
+                            <button type="submit" class="save-button">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Simpan Perubahan
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+                {{-- INFO --}}
+                <aside class="form-info-card">
+
+                    <div class="info-card-icon">
+                        <i class="bi bi-lightbulb-fill"></i>
                     </div>
 
-                </div>
+                    <h6>Informasi Perubahan</h6>
 
-                <div class="category-footer">
-                    © {{ date('Y') }} Ranatavan Dimsum · Admin Panel
-                </div>
+                    <p>
+                        Informasi kategori yang diperbarui akan disimpan
+                        ke database setelah tombol Simpan Perubahan ditekan.
+                    </p>
 
-            </main>
+                    <div class="example-heading">
+                        Kategori saat ini:
+                    </div>
+
+                    <div class="current-category">
+                        <i class="bi bi-tags-fill"></i>
+                        <strong>{{ $kategori->name }}</strong>
+                    </div>
+
+                    <div class="info-note">
+                        <i class="bi bi-info-circle-fill"></i>
+                        Pastikan perubahan nama dan deskripsi sudah sesuai.
+                    </div>
+
+                </aside>
+
+            </div>
+
+            {{-- FOOTER --}}
+            <footer class="dashboard-footer">
+                <span>© {{ date('Y') }} Ranatavan Dimsum</span>
+                <span>Made with <i class="bi bi-heart-fill"></i> for delicious moments</span>
+            </footer>
 
         </div>
-    </div>
-
+    </main>
 </div>
 
 @endsection
 
 @push('styles')
 <style>
-
-/* DASAR */
-.category-page {
+.category-form-page {
+    --orange: #f07828;
+    --orange-dark: #d95d16;
+    --peach: #fff1e5;
+    --brown: #713d25;
     min-height: 100vh;
-    background: #f8f5f0;
-}
-
-/* NAVBAR */
-.category-navbar {
-    background: #563522;
-    min-height: 70px;
-}
-
-.brand-logo {
-    width: 42px;
-    height: 42px;
-    display: grid;
-    place-items: center;
-    background: rgba(255,255,255,.13);
-    border-radius: 12px;
-    font-size: 23px;
-}
-
-.brand-subtitle {
-    color: #dfbd9a;
-    font-size: 9px;
-    letter-spacing: 2px;
-    margin-top: 4px;
-}
-
-.user-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #d9b58e;
-    color: #563522;
-    display: grid;
-    place-items: center;
-    font-weight: bold;
-}
-
-.btn-logout {
-    background: #fff7ec;
-    color: #70452c;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.btn-logout:hover {
-    background: #eadbcd;
-    color: #563522;
+    display: flex;
+    background: #fff9f4;
+    color: #38271f;
+    font-family: 'DM Sans', Arial, sans-serif;
 }
 
 /* SIDEBAR */
-.category-sidebar {
-    background: #70452c;
-    min-height: calc(100vh - 70px);
-    padding: 28px 16px;
+.category-form-page .admin-sidebar {
+    width: 258px;
+    min-width: 258px;
+    background: #fff;
+    border-right: 1px solid #f4e5d9;
+    padding: 27px 17px 18px;
     display: flex;
     flex-direction: column;
 }
 
-.sidebar-heading {
-    color: #d9b99a;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 1.5px;
-    padding: 0 10px;
-    margin-bottom: 12px;
-}
-
-.sidebar-link {
+.category-form-page .sidebar-brand {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #f8eee4;
+    padding: 0 9px 30px;
+}
+
+.category-form-page .brand-icon {
+    width: 47px;
+    height: 47px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #ff9d52, #f07828);
+    font-size: 26px;
+    box-shadow: 0 5px 12px rgba(240,120,40,.2);
+}
+
+.category-form-page .sidebar-brand h5 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0;
+    color: var(--brown);
+}
+
+.category-form-page .sidebar-brand span {
+    display: block;
+    color: #b58b70;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    margin-top: 3px;
+    font-weight: 800;
+}
+
+.category-form-page .sidebar-label {
+    padding: 0 11px;
+    color: #b5a49a;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.category-form-page .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.category-form-page .sidebar-link {
+    min-height: 45px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #79665a;
     text-decoration: none;
     font-size: 13px;
-    padding: 12px;
-    border-radius: 9px;
-    margin-bottom: 5px;
+    font-weight: 600;
+    border-radius: 10px;
     transition: .2s;
 }
 
-.sidebar-link span {
-    width: 22px;
-    text-align: center;
+.category-form-page .sidebar-link i {
     font-size: 17px;
+    width: 20px;
+    text-align: center;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-    background: #946747;
+.category-form-page .sidebar-link:hover {
+    background: #fff1e5;
+    color: var(--orange-dark);
+}
+
+.category-form-page .sidebar-link.active {
+    background: linear-gradient(110deg, #f07828, #ff9d52);
     color: white;
+    box-shadow: 0 6px 14px rgba(240,120,40,.22);
 }
 
-.disabled-menu {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #f8eee4;
-    font-size: 13px;
-    padding: 12px;
-    opacity: .65;
+.category-form-page .disabled-link {
+    opacity: .45;
+    pointer-events: none;
 }
 
-.disabled-menu small {
+.category-form-page .disabled-link small {
     margin-left: auto;
     font-size: 9px;
+    background: #f5eee8;
+    padding: 3px 6px;
+    border-radius: 5px;
 }
 
-.sidebar-bottom {
+.category-form-page .sidebar-bottom {
     margin-top: auto;
-    padding-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #f1e7df;
 }
 
-.sidebar-note {
-    padding: 15px;
-    background: rgba(255,255,255,.09);
-    border-radius: 12px;
-    color: white;
-    font-size: 12px;
-}
-
-.sidebar-note > span {
-    font-size: 23px;
-}
-
-.sidebar-note small {
-    color: #e0c7ae;
-    font-size: 10px;
-}
-
-/* KONTEN */
-.category-content {
-    padding: 32px;
-}
-
-.page-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 28px;
-}
-
-.eyebrow {
-    color: #a47c59;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.page-heading h2 {
-    color: #563522;
-    font-weight: 800;
-    font-size: 27px;
-    margin: 7px 0;
-}
-
-.page-heading p {
-    color: #96887d;
-    font-size: 13px;
-    margin: 0;
-}
-
-.btn-back {
-    background: white;
-    color: #70452c;
-    border: 1px solid #e9d9c8;
-    padding: 10px 17px;
-    border-radius: 9px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.btn-back:hover {
-    background: #f4e9dd;
-    color: #563522;
-}
-
-/* FORM */
-.category-form-wrapper {
-    max-width: 780px;
-    margin: 0 auto;
-}
-
-.form-card {
-    background: white;
-    border: 1px solid #eee4da;
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 5px 20px rgba(75,46,27,.06);
-}
-
-.form-heading {
+.category-form-page .sidebar-profile {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding-bottom: 22px;
-    margin-bottom: 28px;
-    border-bottom: 1px solid #eee8e1;
+    gap: 10px;
+    padding: 0 5px 16px;
 }
 
-.form-icon {
-    width: 50px;
-    height: 50px;
-    flex-shrink: 0;
+.category-form-page .profile-avatar,
+.category-form-page .topbar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     display: grid;
     place-items: center;
-    background: #f5eadd;
-    color: #70452c;
-    border-radius: 13px;
-    font-size: 23px;
+    background: #ffead8;
+    color: var(--orange-dark);
+    font-weight: 800;
 }
 
-.form-heading h5 {
-    color: #563522;
-    font-size: 17px;
+.category-form-page .profile-info strong,
+.category-form-page .topbar-user strong {
+    display: block;
+    font-size: 12px;
+    color: var(--brown);
+}
+
+.category-form-page .profile-info span,
+.category-form-page .topbar-user span {
+    display: block;
+    color: #a08f82;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.category-form-page .logout-button {
+    width: 100%;
+    border: 1px solid #f5dfd0;
+    border-radius: 9px;
+    padding: 10px;
+    background: white;
+    color: #bd6340;
+    font-size: 12px;
     font-weight: 700;
+    text-align: left;
+    transition: .2s;
+}
+
+.category-form-page .logout-button i {
+    margin-right: 8px;
+}
+
+.category-form-page .logout-button:hover {
+    background: #fff1e5;
+    border-color: #f3b18a;
+}
+
+/* MAIN */
+.category-form-page .admin-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.category-form-page .admin-topbar {
+    min-height: 83px;
+    background: white;
+    border-bottom: 1px solid #f4e5d9;
+    padding: 15px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.category-form-page .topbar-caption {
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: #bd9278;
+    font-weight: 800;
     margin-bottom: 5px;
 }
 
-.form-heading p {
-    color: #9b8d81;
+.category-form-page .admin-topbar h5 {
+    margin: 0;
+    color: var(--brown);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.category-form-page .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.category-form-page .topbar-date {
+    color: #8e7e72;
     font-size: 12px;
+}
+
+.category-form-page .topbar-date i {
+    margin-right: 6px;
+    color: var(--orange);
+}
+
+.category-form-page .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-left: 20px;
+    border-left: 1px solid #f1e7df;
+}
+
+.category-form-page .topbar-avatar {
+    width: 36px;
+    height: 36px;
+}
+
+.category-form-page .dashboard-content {
+    padding: 30px 36px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+/* BREADCRUMB */
+.breadcrumb-custom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 20px;
+    font-size: 11px;
+    color: #a39488;
+}
+
+.breadcrumb-custom a {
+    color: #d9793b;
+    text-decoration: none;
+}
+
+.breadcrumb-custom a:hover {
+    color: #bd5317;
+}
+
+.breadcrumb-custom i {
+    font-size: 9px;
+}
+
+/* BANNER */
+.form-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 165px;
+    border-radius: 19px;
+    padding: 27px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(110deg, #fff 45%, #fff0e3);
+    border: 1px solid #f3e4d8;
+    margin-bottom: 25px;
+}
+
+.form-banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+.form-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--orange);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.form-banner h1 {
+    color: var(--brown);
+    font-size: 27px;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+.form-banner p {
+    color: #9a8b80;
+    font-size: 12px;
+    margin: 0;
+}
+
+.form-banner-decoration {
+    position: absolute;
+    right: 30%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+    font-size: 90px;
+    opacity: .07;
+}
+
+.back-button {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: 1px solid #f1ddcd;
+    border-radius: 9px;
+    background: white;
+    color: #9a5932;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.back-button:hover {
+    background: #fff1e5;
+    color: #bd5317;
+}
+
+/* FORM */
+.form-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 20px;
+    align-items: start;
+}
+
+.form-card,
+.form-info-card {
+    background: white;
+    border: 1px solid #f2e5dc;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(120,65,30,.035);
+}
+
+.form-card {
+    padding: 27px;
+}
+
+.form-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding-bottom: 21px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f2e8e0;
+}
+
+.form-heading-icon {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    background: #fff0e3;
+    color: #e87932;
+    border-radius: 12px;
+    font-size: 19px;
+}
+
+.form-card-heading h5 {
+    color: #493125;
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0 0 5px;
+}
+
+.form-card-heading p {
+    color: #9a8b80;
+    font-size: 11px;
     margin: 0;
 }
 
 .form-group-custom {
-    margin-bottom: 27px;
+    margin-bottom: 24px;
 }
 
 .form-label {
     display: block;
-    color: #563522;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 10px;
+    color: #49372b;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 9px;
 }
 
-.form-control {
-    border: 1px solid #e5d9cd;
+.required-mark {
+    color: #e45d46;
+}
+
+.optional-mark {
+    margin-left: 6px;
+    color: #b09c8e;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.input-icon-wrapper,
+.textarea-icon-wrapper {
+    position: relative;
+}
+
+.input-icon-wrapper > i,
+.textarea-icon-wrapper > i {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    color: #d68a59;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.category-form-page .form-control {
+    width: 100%;
+    border: 1px solid #eaded3;
     border-radius: 9px;
-    padding: 13px 15px;
-    font-size: 13px;
+    padding: 12px 14px 12px 40px;
+    font-size: 12px;
+    color: #49372b;
     background: #fffdfb;
     transition: .2s;
 }
 
-.form-control::placeholder {
-    color: #b9aca0;
+.category-form-page .form-control::placeholder {
+    color: #b8aaa0;
 }
 
-.form-control:focus {
-    border-color: #a47c59;
-    box-shadow: 0 0 0 3px rgba(112,69,44,.10);
+.category-form-page .form-control:focus {
+    border-color: #f07828;
+    box-shadow: 0 0 0 3px rgba(240,120,40,.10);
     background: white;
 }
 
-textarea.form-control {
+.category-form-page textarea.form-control {
+    min-height: 130px;
     resize: vertical;
-    min-height: 125px;
-}
-
-.form-text {
-    display: block;
-    color: #a09287;
-    font-size: 11px;
-    margin-top: 8px;
-}
-
-/* TOMBOL */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    border-top: 1px solid #eee8e1;
-    padding-top: 23px;
-    margin-top: 10px;
-}
-
-.btn-cancel,
-.btn-save {
-    min-width: 145px;
-    padding: 12px 18px;
-    border-radius: 9px;
-    font-size: 12px;
-    font-weight: 700;
-    transition: .2s;
-}
-
-.btn-cancel {
-    background: #f5eee7;
-    color: #70452c;
-    border: 1px solid #eadbcd;
-}
-
-.btn-cancel:hover {
-    background: #eadbcd;
-    color: #563522;
-}
-
-.btn-save {
-    background: #70452c;
-    color: white;
-    border: 1px solid #70452c;
-}
-
-.btn-save:hover {
-    background: #563522;
-    color: white;
-}
-
-/* INFORMASI */
-.info-card {
-    display: flex;
-    gap: 13px;
-    background: #f5eadc;
-    border: 1px solid #ead7c3;
-    border-radius: 12px;
-    padding: 18px;
-    margin-top: 20px;
-    color: #70452c;
-    font-size: 13px;
-}
-
-.info-icon {
-    font-size: 22px;
-}
-
-.info-card p {
-    margin: 5px 0 0;
-    font-size: 11px;
     line-height: 1.7;
 }
 
-/* FOOTER */
-.category-footer {
-    text-align: center;
-    color: #aa9c90;
+.form-help {
+    display: block;
+    margin-top: 8px;
+    color: #a39488;
+    font-size: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #f2e8e0;
+    padding-top: 21px;
+    margin-top: 8px;
+}
+
+.cancel-button,
+.save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border-radius: 9px;
     font-size: 11px;
-    padding: 30px 0 5px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.cancel-button {
+    border: 1px solid #eaded3;
+    background: #fff;
+    color: #8c7464;
+}
+
+.cancel-button:hover {
+    background: #f8eee6;
+    color: #713d25;
+}
+
+.save-button {
+    border: none;
+    background: linear-gradient(110deg, #f07828, #ff9d52);
+    color: white;
+    box-shadow: 0 5px 12px rgba(240,120,40,.18);
+}
+
+.save-button:hover {
+    background: linear-gradient(110deg, #d95d16, #f07828);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* INFO */
+.form-info-card {
+    padding: 22px;
+}
+
+.info-card-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #fff0e3;
+    color: #e87932;
+    font-size: 19px;
+    margin-bottom: 15px;
+}
+
+.form-info-card h6 {
+    color: #493125;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.form-info-card > p {
+    color: #998a7f;
+    font-size: 11px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.example-heading {
+    color: #a18b7b;
+    font-size: 10px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.current-category {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #fff9f4;
+    border: 1px solid #f4e8df;
+    border-radius: 9px;
+    color: #725340;
+    font-size: 11px;
+}
+
+.current-category i {
+    color: #e87932;
+    font-size: 16px;
+}
+
+.info-note {
+    display: flex;
+    gap: 8px;
+    margin-top: 17px;
+    padding: 11px;
+    border-radius: 8px;
+    background: #fff5e8;
+    color: #a06d42;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.info-note i {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.form-alert {
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.form-alert > i {
+    margin-top: 2px;
+}
+
+.category-form-page .dashboard-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 23px 0 5px;
+    margin-top: 25px;
+    border-top: 1px solid #f0e3d9;
+    color: #a39488;
+    font-size: 10px;
+}
+
+.category-form-page .dashboard-footer i {
+    color: #ed7542;
+    font-size: 9px;
 }
 
 /* RESPONSIVE */
-@media (max-width: 767px) {
-
-    .category-sidebar {
-        min-height: auto;
+@media (max-width: 1100px) {
+    .form-layout {
+        grid-template-columns: minmax(0, 1fr) 230px;
     }
 
-    .category-content {
-        padding: 22px 15px;
+    .category-form-page .dashboard-content {
+        padding: 25px 22px;
+    }
+}
+
+@media (max-width: 850px) {
+    .category-form-page .admin-sidebar {
+        width: 215px;
+        min-width: 215px;
     }
 
-    .page-heading {
-        align-items: flex-start;
-        flex-direction: column;
+    .form-layout {
+        grid-template-columns: 1fr;
     }
 
-    .user-info {
+    .form-info-card {
         display: none;
     }
 
+    .category-form-page .topbar-date {
+        display: none;
+    }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 600px) {
+    .category-form-page {
+        display: block;
+    }
+
+    .category-form-page .admin-sidebar {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .category-form-page .sidebar-menu {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .category-form-page .admin-topbar {
+        padding: 15px 18px;
+    }
+
+    .category-form-page .topbar-user {
+        display: none;
+    }
+
+    .category-form-page .dashboard-content {
+        padding: 18px 14px;
+    }
+
+    .form-banner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+        padding: 22px;
+    }
+
+    .form-banner h1 {
+        font-size: 23px;
+    }
+
+    .form-banner-decoration {
+        right: 10px;
+        top: 25%;
+        font-size: 65px;
+    }
 
     .form-card {
         padding: 20px;
@@ -637,11 +1017,14 @@ textarea.form-control {
         flex-direction: column-reverse;
     }
 
-    .form-actions .btn {
+    .cancel-button,
+    .save-button {
         width: 100%;
     }
 
+    .category-form-page .dashboard-footer {
+        flex-direction: column;
+    }
 }
-
 </style>
 @endpush

@@ -4,342 +4,350 @@
 
 @section('content')
 
-<div class="admin-page">
+<div class="admin-dashboard variant-dashboard">
 
-    {{-- NAVBAR --}}
-    <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
-        <div class="container-fluid px-4">
+    {{-- SIDEBAR --}}
+    <aside class="admin-sidebar">
 
-            <a class="navbar-brand d-flex align-items-center gap-2"
-               href="{{ route('admin.dashboard') }}">
-                <span class="brand-logo">🥟</span>
-                <span>
-                    Ranatavan Dimsum
-                    <small class="d-block brand-subtitle">ADMIN PANEL</small>
-                </span>
+        <div class="sidebar-brand">
+            <div class="brand-icon">🥟</div>
+            <div>
+                <h5>Ranatavan</h5>
+                <span>DIMSUM MANAGEMENT</span>
+            </div>
+        </div>
+
+        <div class="sidebar-label">MENU UTAMA</div>
+
+        <nav class="sidebar-menu">
+            <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
             </a>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
+            <a href="{{ route('admin.kasir.index') }}" class="sidebar-link">
+                <i class="bi bi-people"></i>
+                <span>Data Kasir</span>
+            </a>
 
-                <div class="user-info text-end">
-                    <span class="d-block text-white fw-semibold">
-                        {{ Auth::user()->name }}
-                    </span>
-                    <small class="text-light opacity-75">Administrator</small>
-                </div>
+            <a href="{{ route('admin.kategori.index') }}" class="sidebar-link">
+                <i class="bi bi-tags"></i>
+                <span>Data Kategori</span>
+            </a>
 
-                <div class="user-avatar">
+            <a href="{{ route('admin.varian.index') }}" class="sidebar-link active">
+                <i class="bi bi-grid"></i>
+                <span>Data Varian</span>
+            </a>
+
+            <a href="{{ route('admin.produk.index') }}" class="sidebar-link">
+                <i class="bi bi-box-seam"></i>
+                <span>Data Produk</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-label mt-4">LAINNYA</div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-boxes"></i>
+                <span>Manajemen Stok</span>
+                <small>Segera</small>
+            </a>
+
+            <a href="#" class="sidebar-link disabled-link">
+                <i class="bi bi-receipt"></i>
+                <span>Laporan Penjualan</span>
+                <small>Segera</small>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
 
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-logout">
-                        Keluar
-                    </button>
-                </form>
+                <div class="profile-info">
+                    <strong>{{ Auth::user()->name }}</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-button">
+                    <i class="bi bi-box-arrow-left"></i>
+                    Keluar
+                </button>
+            </form>
+
+        </div>
+    </aside>
+
+    {{-- MAIN --}}
+    <main class="admin-main">
+
+        {{-- TOPBAR --}}
+        <header class="admin-topbar">
+            <div>
+                <div class="topbar-caption">RANATAVAN DIMSUM / ADMIN</div>
+                <h5>Data Varian</h5>
+            </div>
+
+            <div class="topbar-right">
+                <div class="topbar-date">
+                    <i class="bi bi-calendar3"></i>
+                    {{ now()->translatedFormat('d F Y') }}
+                </div>
+
+                <div class="topbar-user">
+                    <div class="topbar-avatar">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <div>
+                        <strong>{{ Auth::user()->name }}</strong>
+                        <span>Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {{-- CONTENT --}}
+        <div class="dashboard-content">
+
+            {{-- BREADCRUMB --}}
+            <div class="breadcrumb-custom">
+                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <i class="bi bi-chevron-right"></i>
+                <span>Data Varian</span>
+            </div>
+
+            {{-- NOTIFIKASI --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show form-alert">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <div>{{ session('success') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show form-alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <div>{{ session('error') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            {{-- BANNER --}}
+            <section class="variant-banner">
+                <div class="banner-content">
+                    <span class="banner-tag">
+                        <i class="bi bi-grid"></i>
+                        VARIANT MANAGEMENT
+                    </span>
+
+                    <h1>Kelola Varian Produk</h1>
+
+                    <p>
+                        Atur berbagai varian produk berdasarkan kategori
+                        agar pengelolaan Ranatavan Dimsum lebih mudah
+                        dan terstruktur.
+                    </p>
+                </div>
+
+                <div class="banner-decoration">🏷️</div>
+            </section>
+
+            {{-- RINGKASAN --}}
+            <div class="section-heading">
+                <div>
+                    <h5>Ringkasan Data</h5>
+                    <p>Informasi jumlah data dalam pengelolaan varian.</p>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-sm-6 col-xl-4">
+                    <div class="stat-card">
+                        <div class="stat-icon orange-icon">
+                            <i class="bi bi-grid"></i>
+                        </div>
+                        <div>
+                            <p>Total Varian</p>
+                            <h3>{{ $variants->total() }}</h3>
+                            <small>Varian terdaftar</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xl-4">
+                    <div class="stat-card">
+                        <div class="stat-icon peach-icon">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                        <div>
+                            <p>Total Kategori</p>
+                            <h3>{{ \App\Models\Category::count() }}</h3>
+                            <small>Kategori tersedia</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xl-4">
+                    <div class="stat-card">
+                        <div class="stat-icon green-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div>
+                            <p>Total Produk</p>
+                            <h3>{{ \App\Models\Product::count() }}</h3>
+                            <small>Produk terdaftar</small>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-        </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
+            {{-- DAFTAR VARIAN --}}
+            <section class="content-card">
 
-            {{-- SIDEBAR --}}
-            <aside class="col-md-3 col-lg-2 admin-sidebar">
-
-                <p class="sidebar-heading">MENU UTAMA</p>
-
-                <a href="{{ route('admin.dashboard') }}"
-                   class="sidebar-link">
-                    <span>⌂</span> Dashboard
-                </a>
-
-                <p class="sidebar-heading mt-4">MANAJEMEN DATA</p>
-
-                <a href="{{ route('admin.kasir.index') }}"
-                   class="sidebar-link">
-                    <span>📊</span> Data Kasir
-                </a>
-
-                <a href="{{ route('admin.kategori.index') }}"
-                   class="sidebar-link">
-                    <span>▦</span> Data Kategori
-                </a>
-
-                <a href="{{ route('admin.varian.index') }}"
-                   class="sidebar-link active">
-                    <span>◇</span> Data Varian
-                </a>
-
-                <a href="{{ route('admin.produk.index') }}"
-                   class="sidebar-link">
-                    <span>🥟</span> Data Produk
-                </a>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▤</span> Manajemen Stok
-                    <small>Segera</small>
-                </div>
-
-                <p class="sidebar-heading mt-4">LAPORAN</p>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▧</span> Laporan Penjualan
-                    <small>Segera</small>
-                </div>
-
-                <div class="sidebar-link disabled-menu">
-                    <span>▤</span> Laporan Stok
-                    <small>Segera</small>
-                </div>
-
-                <div class="sidebar-bottom">
-                    <div class="sidebar-note">
-                        <span>🥟</span>
-                        <p class="mb-1 fw-semibold">Ranatavan Dimsum</p>
-                        <small>Sistem Manajemen Penjualan</small>
-                    </div>
-                </div>
-
-            </aside>
-
-            {{-- KONTEN UTAMA --}}
-            <main class="col-md-9 col-lg-10 admin-content">
-
-                {{-- JUDUL HALAMAN --}}
-                <div class="page-heading">
-
+                <div class="content-card-heading">
                     <div>
-                        <span class="eyebrow">MANAJEMEN DATA</span>
-
-                        <h2>Data Varian</h2>
-
-                        <p>
-                            Kelola berbagai varian produk Ranatavan Dimsum.
-                        </p>
-                    </div>
-
-                    <div class="date-label">
-                        📅 {{ now()->translatedFormat('d F Y') }}
-                    </div>
-
-                </div>
-
-                {{-- NOTIFIKASI --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- BANNER --}}
-                <div class="welcome-banner">
-
-                    <div>
-                        <span class="welcome-label">
-                            VARIANT MANAGEMENT
-                        </span>
-
-                        <h3>Kelola Varian Produk</h3>
-
-                        <p>
-                            Atur nama varian dan kategori produk agar
-                            pengelolaan produk Ranatavan Dimsum lebih mudah.
-                        </p>
-                    </div>
-
-                    <div class="welcome-decoration">🏷️</div>
-
-                </div>
-
-                {{-- STATISTIK --}}
-                <div class="section-heading">
-                    <div>
-                        <h5>Ringkasan Data</h5>
-                        <p>Informasi jumlah data varian saat ini</p>
-                    </div>
-                </div>
-
-                <div class="row g-3 mb-4">
-
-                    <div class="col-sm-6 col-xl-4">
-                        <div class="stat-card">
-                            <div class="stat-icon icon-brown">🏷️</div>
-
-                            <div>
-                                <p>Total Varian</p>
-                                <h3>{{ $variants->total() }}</h3>
-                                <small>Varian terdaftar</small>
-                            </div>
+                        <div class="card-heading-icon">
+                            <i class="bi bi-grid"></i>
                         </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-4">
-                        <div class="stat-card">
-                            <div class="stat-icon icon-gold">▦</div>
-
-                            <div>
-                                <p>Total Kategori</p>
-                                <h3>{{ \App\Models\Category::count() }}</h3>
-                                <small>Kategori tersedia</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-4">
-                        <div class="stat-card">
-                            <div class="stat-icon icon-green">🥟</div>
-
-                            <div>
-                                <p>Total Produk</p>
-                                <h3>{{ \App\Models\Product::count() }}</h3>
-                                <small>Produk terdaftar</small>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {{-- TABEL DATA VARIAN --}}
-                <div class="content-card">
-
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-
                         <div>
-                            <h5 class="fw-bold mb-1">Daftar Varian</h5>
-
-                            <p class="text-muted small mb-0">
-                                Daftar seluruh varian berdasarkan kategori produk.
-                            </p>
+                            <h5>Daftar Varian</h5>
+                            <p>Daftar seluruh varian berdasarkan kategori produk.</p>
                         </div>
-
-                        <a href="{{ route('admin.varian.create') }}"
-                           class="btn btn-cokelat">
-                            + Tambah Varian
-                        </a>
-
                     </div>
 
-                    <div class="table-responsive">
+                    <a href="{{ route('admin.varian.create') }}" class="add-button">
+                        <i class="bi bi-plus-circle"></i>
+                        Tambah Varian
+                    </a>
+                </div>
 
-                        <table class="table table-hover align-middle">
+                <div class="table-responsive">
+                    <table class="table variant-table align-middle">
 
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th width="65">No</th>
+                                <th>Kategori</th>
+                                <th>Nama Varian</th>
+                                <th>Jumlah Produk</th>
+                                <th width="180" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($variants as $variant)
                                 <tr>
-                                    <th width="65">No</th>
-                                    <th>Kategori</th>
-                                    <th>Nama Varian</th>
-                                    <th>Jumlah Produk</th>
-                                    <th width="180" class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
+                                    <td class="number-cell">
+                                        {{ $variants->firstItem() + $loop->index }}
+                                    </td>
 
-                            <tbody>
+                                    <td>
+                                        <span class="category-badge">
+                                            <i class="bi bi-tag-fill"></i>
+                                            {{ $variant->category->name ?? '-' }}
+                                        </span>
+                                    </td>
 
-                                @forelse($variants as $variant)
-
-                                    <tr>
-
-                                        <td>
-                                            {{ $variants->firstItem() + $loop->index }}
-                                        </td>
-
-                                        <td>
-                                            <span class="category-badge">
-                                                {{ $variant->category->name ?? '-' }}
-                                            </span>
-                                        </td>
-
-                                        <td class="fw-semibold">
+                                    <td>
+                                        <strong class="variant-name">
                                             {{ $variant->name }}
-                                        </td>
+                                        </strong>
+                                    </td>
 
-                                        <td>
-                                            <span class="product-count">
-                                                {{ $variant->products_count }} Produk
-                                            </span>
-                                        </td>
+                                    <td>
+                                        <span class="product-count">
+                                            <i class="bi bi-box-seam"></i>
+                                            {{ $variant->products_count }} Produk
+                                        </span>
+                                    </td>
 
-                                        <td>
-                                            <div class="d-flex justify-content-center gap-2">
+                                    <td>
+                                        <div class="action-buttons">
 
-                                                <a href="{{ route('admin.varian.edit', $variant->id) }}"
-                                                   class="btn btn-sm btn-edit">
-                                                    Edit
-                                                </a>
+                                            <a href="{{ route('admin.varian.edit', $variant->id) }}"
+                                               class="action-edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                                Edit
+                                            </a>
 
-                                                <form action="{{ route('admin.varian.destroy', $variant->id) }}"
-                                                      method="POST"
-                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus varian ini?')">
+                                            <form action="{{ route('admin.varian.destroy', $variant->id) }}"
+                                                  method="POST"
+                                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus varian ini?')">
+                                                @csrf
+                                                @method('DELETE')
 
-                                                    @csrf
-                                                    @method('DELETE')
+                                                <button type="submit" class="action-delete">
+                                                    <i class="bi bi-trash"></i>
+                                                    Hapus
+                                                </button>
+                                            </form>
 
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-delete">
-                                                        Hapus
-                                                    </button>
-
-                                                </form>
-
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">
+                                                <i class="bi bi-grid"></i>
                                             </div>
-                                        </td>
 
-                                    </tr>
+                                            <h6>Belum Ada Data Varian</h6>
 
-                                @empty
-
-                                    <tr>
-                                        <td colspan="5" class="text-center py-5">
-
-                                            <div style="font-size:40px;">🏷️</div>
-
-                                            <h6 class="fw-bold mt-2">
-                                                Belum Ada Data Varian
-                                            </h6>
-
-                                            <p class="text-muted small mb-0">
-                                                Silakan tambahkan varian produk terlebih dahulu.
+                                            <p>
+                                                Silakan tambahkan varian produk
+                                                terlebih dahulu.
                                             </p>
 
-                                        </td>
-                                    </tr>
+                                            <a href="{{ route('admin.varian.create') }}"
+                                               class="add-button">
+                                                <i class="bi bi-plus-circle"></i>
+                                                Tambah Varian
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
 
-                                @endforelse
+                    </table>
+                </div>
 
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                    {{-- PAGINATION --}}
-                    <div class="mt-3">
+                {{-- PAGINATION --}}
+                @if($variants->hasPages())
+                    <div class="pagination-wrapper">
                         {{ $variants->links() }}
                     </div>
+                @endif
 
+                <div class="table-footer">
+                    Menampilkan {{ $variants->firstItem() ?? 0 }}
+                    sampai {{ $variants->lastItem() ?? 0 }}
+                    dari {{ $variants->total() }} data varian
                 </div>
 
-                {{-- FOOTER --}}
-                <div class="admin-footer">
-                    © {{ date('Y') }} Ranatavan Dimsum · Admin Panel
-                </div>
+            </section>
 
-            </main>
+            {{-- FOOTER --}}
+            <footer class="dashboard-footer">
+                <span>© {{ date('Y') }} Ranatavan Dimsum</span>
+                <span>Made with <i class="bi bi-heart-fill"></i> for delicious moments</span>
+            </footer>
 
         </div>
-    </div>
-
+    </main>
 </div>
 
 @endsection
@@ -347,418 +355,781 @@
 @push('styles')
 <style>
 
-    /* HALAMAN */
-    .admin-page {
-        min-height: 100vh;
-        background: #f8f5f0;
+/* =====================================
+   VARIANT DASHBOARD
+===================================== */
+
+.variant-dashboard {
+    --orange: #f07828;
+    --orange-dark: #d95d16;
+    --light-orange: #ff9d52;
+    --peach: #fff1e5;
+    --brown: #713d25;
+
+    min-height: 100vh;
+    display: flex;
+    background: #fff9f4;
+    color: #38271f;
+    font-family: 'DM Sans', Arial, sans-serif;
+
+    /* PERBAIKAN: menghilangkan jarak atas */
+    margin-top: -24px;
+}
+
+/* SIDEBAR */
+
+.variant-dashboard .admin-sidebar {
+    width: 258px;
+    min-width: 258px;
+    background: #fff;
+    border-right: 1px solid #f4e5d9;
+    padding: 27px 17px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.variant-dashboard .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 9px 30px;
+}
+
+.variant-dashboard .brand-icon {
+    width: 47px;
+    height: 47px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #ff9d52, #f07828);
+    font-size: 26px;
+    box-shadow: 0 5px 12px rgba(240,120,40,.2);
+}
+
+.variant-dashboard .sidebar-brand h5 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0;
+    color: var(--brown);
+}
+
+.variant-dashboard .sidebar-brand span {
+    display: block;
+    color: #b58b70;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    margin-top: 3px;
+    font-weight: 800;
+}
+
+.variant-dashboard .sidebar-label {
+    padding: 0 11px;
+    color: #b5a49a;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.variant-dashboard .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.variant-dashboard .sidebar-link {
+    min-height: 45px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #79665a;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: .2s;
+}
+
+.variant-dashboard .sidebar-link i {
+    font-size: 17px;
+    width: 20px;
+    text-align: center;
+}
+
+.variant-dashboard .sidebar-link:hover {
+    background: #fff1e5;
+    color: var(--orange-dark);
+}
+
+.variant-dashboard .sidebar-link.active {
+    background: linear-gradient(110deg, #f07828, #ff9d52);
+    color: white;
+    box-shadow: 0 6px 14px rgba(240,120,40,.22);
+}
+
+.variant-dashboard .disabled-link {
+    opacity: .45;
+    pointer-events: none;
+}
+
+.variant-dashboard .disabled-link small {
+    margin-left: auto;
+    font-size: 9px;
+    background: #f5eee8;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+.variant-dashboard .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f1e7df;
+}
+
+.variant-dashboard .sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 5px 16px;
+}
+
+.variant-dashboard .profile-avatar,
+.variant-dashboard .topbar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #ffead8;
+    color: var(--orange-dark);
+    font-weight: 800;
+}
+
+.variant-dashboard .profile-info strong,
+.variant-dashboard .topbar-user strong {
+    display: block;
+    font-size: 12px;
+    color: var(--brown);
+}
+
+.variant-dashboard .profile-info span,
+.variant-dashboard .topbar-user span {
+    display: block;
+    color: #a08f82;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.variant-dashboard .logout-button {
+    width: 100%;
+    border: 1px solid #f5dfd0;
+    border-radius: 9px;
+    padding: 10px;
+    background: white;
+    color: #bd6340;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    transition: .2s;
+}
+
+.variant-dashboard .logout-button i {
+    margin-right: 8px;
+}
+
+.variant-dashboard .logout-button:hover {
+    background: #fff1e5;
+    border-color: #f3b18a;
+}
+
+/* MAIN & TOPBAR */
+
+.variant-dashboard .admin-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.variant-dashboard .admin-topbar {
+    min-height: 83px;
+    background: white;
+    border-bottom: 1px solid #f4e5d9;
+    padding: 15px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.variant-dashboard .topbar-caption {
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: #bd9278;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.variant-dashboard .admin-topbar h5 {
+    margin: 0;
+    color: var(--brown);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.variant-dashboard .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.variant-dashboard .topbar-date {
+    color: #8e7e72;
+    font-size: 12px;
+}
+
+.variant-dashboard .topbar-date i {
+    margin-right: 6px;
+    color: var(--orange);
+}
+
+.variant-dashboard .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-left: 20px;
+    border-left: 1px solid #f1e7df;
+}
+
+.variant-dashboard .topbar-avatar {
+    width: 36px;
+    height: 36px;
+}
+
+/* CONTENT */
+
+.variant-dashboard .dashboard-content {
+    padding: 30px 36px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+/* BREADCRUMB */
+
+.variant-dashboard .breadcrumb-custom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 20px;
+    font-size: 11px;
+    color: #a39488;
+}
+
+.variant-dashboard .breadcrumb-custom a {
+    color: #d9793b;
+    text-decoration: none;
+}
+
+.variant-dashboard .breadcrumb-custom a:hover {
+    color: #bd5317;
+}
+
+.variant-dashboard .breadcrumb-custom i {
+    font-size: 9px;
+}
+
+/* BANNER */
+
+.variant-dashboard .variant-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 165px;
+    border-radius: 19px;
+    padding: 27px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(110deg, #fff 45%, #fff0e3);
+    border: 1px solid #f3e4d8;
+    margin-bottom: 27px;
+}
+
+.variant-dashboard .banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+.variant-dashboard .banner-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--orange);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.variant-dashboard .variant-banner h1 {
+    color: var(--brown);
+    font-size: 27px;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+.variant-dashboard .variant-banner p {
+    color: #9a8b80;
+    font-size: 12px;
+    max-width: 570px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.variant-dashboard .banner-decoration {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-12deg);
+    font-size: 95px;
+    opacity: .09;
+}
+
+/* SECTION HEADING */
+
+.variant-dashboard .section-heading {
+    margin-bottom: 15px;
+}
+
+.variant-dashboard .section-heading h5 {
+    color: var(--brown);
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.variant-dashboard .section-heading p {
+    color: #a28b7c;
+    font-size: 11px;
+    margin: 0;
+}
+
+/* STAT CARDS */
+
+.variant-dashboard .stat-card {
+    height: 100%;
+    min-height: 105px;
+    background: white;
+    border: 1px solid #f3e7dc;
+    border-radius: 14px;
+    padding: 19px 17px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 15px rgba(113,61,37,.035);
+    transition: .2s;
+}
+
+.variant-dashboard .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(113,61,37,.08);
+}
+
+.variant-dashboard .stat-icon {
+    width: 47px;
+    min-width: 47px;
+    height: 47px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    font-size: 21px;
+}
+
+.variant-dashboard .orange-icon {
+    background: #fff0e3;
+    color: #e87932;
+}
+
+.variant-dashboard .peach-icon {
+    background: #fff4e9;
+    color: #c88742;
+}
+
+.variant-dashboard .green-icon {
+    background: #eaf4e8;
+    color: #58834f;
+}
+
+.variant-dashboard .stat-card p {
+    color: #9d8b7e;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.variant-dashboard .stat-card h3 {
+    color: var(--brown);
+    font-size: 23px;
+    font-weight: 800;
+    margin-bottom: 2px;
+}
+
+.variant-dashboard .stat-card small {
+    color: #b2a297;
+    font-size: 10px;
+}
+
+/* CONTENT CARD */
+
+.variant-dashboard .content-card {
+    background: white;
+    border: 1px solid #f2e5dc;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(120,65,30,.035);
+}
+
+.variant-dashboard .content-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #f2e8e0;
+}
+
+.variant-dashboard .content-card-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.variant-dashboard .card-heading-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #fff0e3;
+    color: #e87932;
+    font-size: 19px;
+}
+
+.variant-dashboard .content-card-heading h5 {
+    color: #493125;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 0 5px;
+}
+
+.variant-dashboard .content-card-heading p {
+    color: #9a8b80;
+    font-size: 10px;
+    margin: 0;
+}
+
+.variant-dashboard .add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(110deg, #f07828, #ff9d52);
+    color: white;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 5px 12px rgba(240,120,40,.18);
+    transition: .2s;
+}
+
+.variant-dashboard .add-button:hover {
+    background: linear-gradient(110deg, #d95d16, #f07828);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* TABLE */
+
+.variant-dashboard .variant-table {
+    margin-bottom: 0;
+}
+
+.variant-dashboard .variant-table thead th {
+    background: #fff3e9;
+    color: #9a552f;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 14px 13px;
+    white-space: nowrap;
+    border-bottom: 1px solid #f4dfce;
+}
+
+.variant-dashboard .variant-table td {
+    padding: 14px 13px;
+    font-size: 11px;
+    color: #745b4a;
+    border-color: #f5eee8;
+}
+
+.variant-dashboard .variant-table tbody tr {
+    transition: .2s;
+}
+
+.variant-dashboard .variant-table tbody tr:hover {
+    background: #fffaf6;
+}
+
+.variant-dashboard .number-cell {
+    color: #a39488 !important;
+    font-weight: 700;
+}
+
+.variant-dashboard .variant-name {
+    color: #713d25;
+    font-size: 12px;
+}
+
+.variant-dashboard .category-badge,
+.variant-dashboard .product-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.variant-dashboard .category-badge {
+    background: #fff0e4;
+    color: #c3652d;
+}
+
+.variant-dashboard .product-count {
+    background: #eaf4e8;
+    color: #56804e;
+}
+
+/* ACTION BUTTONS */
+
+.variant-dashboard .action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.variant-dashboard .action-edit,
+.variant-dashboard .action-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 9px;
+    border: none;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.variant-dashboard .action-edit {
+    background: #fff0d8;
+    color: #a66b18;
+}
+
+.variant-dashboard .action-edit:hover {
+    background: #f9dfad;
+    color: #80500d;
+}
+
+.variant-dashboard .action-delete {
+    background: #ffeded;
+    color: #c34c43;
+}
+
+.variant-dashboard .action-delete:hover {
+    background: #fbd4d1;
+    color: #9d3029;
+}
+
+/* EMPTY STATE */
+
+.variant-dashboard .empty-state {
+    text-align: center;
+    padding: 38px 15px;
+}
+
+.variant-dashboard .empty-icon {
+    width: 65px;
+    height: 65px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 14px;
+    border-radius: 20px;
+    background: #fff0e3;
+    color: #ed985d;
+    font-size: 28px;
+}
+
+.variant-dashboard .empty-state h6 {
+    color: #713d25;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.variant-dashboard .empty-state p {
+    color: #a39488;
+    font-size: 11px;
+    margin-bottom: 17px;
+}
+
+/* PAGINATION */
+
+.variant-dashboard .pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.variant-dashboard .table-footer {
+    color: #a39488;
+    font-size: 10px;
+    margin-top: 13px;
+}
+
+/* FOOTER */
+
+.variant-dashboard .dashboard-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 23px 0 5px;
+    margin-top: 25px;
+    border-top: 1px solid #f0e3d9;
+    color: #a39488;
+    font-size: 10px;
+}
+
+.variant-dashboard .dashboard-footer i {
+    color: #ed7542;
+    font-size: 9px;
+}
+
+/* ALERT */
+
+.variant-dashboard .form-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-bottom: 18px;
+}
+
+.variant-dashboard .form-alert > i {
+    flex-shrink: 0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+    .variant-dashboard .dashboard-content {
+        padding: 25px 22px;
     }
 
-    /* NAVBAR */
-    .admin-navbar {
-        background: #563522;
-        min-height: 70px;
-        box-shadow: 0 3px 12px rgba(50,30,15,.12);
+    .variant-dashboard .admin-topbar {
+        padding: 15px 22px;
+    }
+}
+
+@media (max-width: 850px) {
+    .variant-dashboard .admin-sidebar {
+        width: 215px;
+        min-width: 215px;
     }
 
-    .brand-logo {
-        background: rgba(255,255,255,.13);
-        width: 40px;
-        height: 40px;
-        display: grid;
-        place-items: center;
-        border-radius: 12px;
-        font-size: 23px;
+    .variant-dashboard .topbar-date {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .variant-dashboard {
+        display: block;
+        margin-top: -24px;
     }
 
-    .admin-navbar .navbar-brand {
-        font-size: 16px;
-        line-height: 1.2;
-    }
-
-    .brand-subtitle {
-        color: #dfbd9a;
-        font-size: 9px;
-        letter-spacing: 2px;
-        margin-top: 4px;
-    }
-
-    .user-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: #d9b58e;
-        color: #563522;
-        display: grid;
-        place-items: center;
-        font-weight: bold;
-    }
-
-    .btn-logout {
-        background: #fff7ec;
-        color: #70452c;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        padding: 8px 14px;
-    }
-
-    .btn-logout:hover {
-        background: #e9d6c1;
-        color: #563522;
-    }
-
-    /* SIDEBAR */
-    .admin-sidebar {
-        background: #70452c;
-        min-height: calc(100vh - 70px);
-        padding: 28px 16px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sidebar-heading {
-        color: #d9b99a;
-        font-size: 10px;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-        padding: 0 10px;
-        margin-bottom: 12px;
-    }
-
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #f8eee4;
-        text-decoration: none;
-        font-size: 13px;
-        padding: 12px;
-        border-radius: 9px;
-        margin-bottom: 5px;
-        transition: .2s;
-    }
-
-    a.sidebar-link:hover,
-    .sidebar-link.active {
-        background: #946747;
-        color: white;
-    }
-
-    .sidebar-link span {
-        width: 22px;
-        text-align: center;
-        font-size: 17px;
-    }
-
-    .disabled-menu {
-        opacity: .65;
-        cursor: not-allowed;
-        justify-content: flex-start;
-    }
-
-    .disabled-menu small {
-        margin-left: auto;
-        font-size: 9px;
-        color: #e0c7ae;
-    }
-
-    .sidebar-bottom {
-        margin-top: auto;
-        padding-top: 35px;
-    }
-
-    .sidebar-note {
-        padding: 15px;
-        background: rgba(255,255,255,.09);
-        border-radius: 12px;
-        color: white;
-        font-size: 12px;
-    }
-
-    .sidebar-note > span {
-        font-size: 23px;
-    }
-
-    .sidebar-note small {
-        color: #e0c7ae;
-        font-size: 10px;
-    }
-
-    /* KONTEN */
-    .admin-content {
-        padding: 30px;
+    .variant-dashboard .admin-sidebar {
+        width: 100%;
         min-width: 0;
     }
 
-    .page-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .eyebrow,
-    .welcome-label {
-        color: #a47c59;
-        font-size: 10px;
-        font-weight: bold;
-        letter-spacing: 2px;
-    }
-
-    .page-heading h2 {
-        color: #563522;
-        font-weight: 800;
-        font-size: 27px;
-        margin: 6px 0;
-    }
-
-    .page-heading p {
-        color: #96887d;
-        font-size: 13px;
-        margin: 0;
-    }
-
-    .date-label {
-        background: white;
-        border: 1px solid #eee3d7;
-        color: #70452c;
-        padding: 10px 14px;
-        border-radius: 10px;
-        font-size: 12px;
-    }
-
-    /* BANNER */
-    .welcome-banner {
-        background: linear-gradient(120deg, #805337, #563522);
-        border-radius: 16px;
-        padding: 28px 32px;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        overflow: hidden;
-        margin-bottom: 30px;
-    }
-
-    .welcome-label {
-        color: #e2c4a5;
-    }
-
-    .welcome-banner h3 {
-        font-weight: 800;
-        margin: 10px 0;
-    }
-
-    .welcome-banner p {
-        color: #ead9c8;
-        font-size: 13px;
-        max-width: 570px;
-        margin: 0;
-        line-height: 1.7;
-    }
-
-    .welcome-decoration {
-        font-size: 75px;
-        opacity: .85;
-        padding: 0 25px;
-    }
-
-    /* SECTION */
-    .section-heading {
-        margin-bottom: 15px;
-    }
-
-    .section-heading h5 {
-        color: #563522;
-        font-weight: 800;
-        margin-bottom: 4px;
-    }
-
-    .section-heading p {
-        color: #a09287;
-        font-size: 12px;
-        margin: 0;
-    }
-
-    /* STATISTIK */
-    .stat-card {
-        background: white;
-        border: 1px solid #f0e8df;
-        border-radius: 14px;
-        padding: 20px 16px;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        height: 100%;
-        box-shadow: 0 4px 15px rgba(75,46,27,.04);
-    }
-
-    .stat-icon {
-        min-width: 48px;
-        width: 48px;
-        height: 48px;
-        border-radius: 13px;
+    .variant-dashboard .sidebar-menu {
         display: grid;
-        place-items: center;
-        font-size: 22px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .icon-brown {
-        background: #f1e4d7;
-        color: #70452c;
+    .variant-dashboard .admin-topbar {
+        padding: 15px 18px;
     }
 
-    .icon-gold {
-        background: #f8efd9;
-        color: #a47c37;
+    .variant-dashboard .topbar-user {
+        display: none;
     }
 
-    .icon-green {
-        background: #e8eee4;
-        color: #60764d;
+    .variant-dashboard .dashboard-content {
+        padding: 18px 14px;
     }
 
-    .stat-card p {
-        color: #92867c;
-        font-size: 12px;
-        margin-bottom: 5px;
+    .variant-dashboard .variant-banner {
+        padding: 22px;
     }
 
-    .stat-card h3 {
-        color: #563522;
-        font-weight: 800;
-        margin-bottom: 3px;
+    .variant-dashboard .variant-banner h1 {
+        font-size: 23px;
     }
 
-    .stat-card small {
-        color: #b0a398;
-        font-size: 10px;
+    .variant-dashboard .banner-decoration {
+        right: 10px;
+        font-size: 65px;
     }
 
-    /* TABEL */
-    .content-card {
-        background: white;
-        border-radius: 14px;
-        padding: 25px;
-        box-shadow: 0 3px 12px rgba(0,0,0,.05);
+    .variant-dashboard .content-card {
+        padding: 17px;
     }
 
-    .table thead th {
-        background: #70452c;
-        color: white;
-        font-size: 12px;
-        padding: 14px;
-        white-space: nowrap;
+    .variant-dashboard .content-card-heading {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .table td {
-        padding: 14px;
-        font-size: 13px;
-        vertical-align: middle;
-        color: #665448;
+    .variant-dashboard .add-button {
+        width: 100%;
     }
 
-    .table tbody tr:hover {
-        background: #fcf8f3;
+    .variant-dashboard .action-buttons {
+        flex-direction: column;
     }
 
-    .category-badge {
-        display: inline-block;
-        background: #f4e9dd;
-        color: #70452c;
-        padding: 6px 11px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
+    .variant-dashboard .action-edit,
+    .variant-dashboard .action-delete {
+        width: 75px;
     }
 
-    .product-count {
-        background: #e8eee4;
-        color: #60764d;
-        padding: 6px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
+    .variant-dashboard .dashboard-footer {
+        flex-direction: column;
     }
-
-    /* TOMBOL */
-    .btn-cokelat {
-        background: #70452c;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 17px;
-        font-size: 13px;
-    }
-
-    .btn-cokelat:hover {
-        background: #563522;
-        color: white;
-    }
-
-    .btn-edit {
-        background: #f2d99b;
-        color: #76551d;
-        border: none;
-    }
-
-    .btn-edit:hover {
-        background: #e7c879;
-        color: #563522;
-    }
-
-    .btn-delete {
-        background: #f3d7d4;
-        color: #a33e35;
-        border: none;
-    }
-
-    .btn-delete:hover {
-        background: #e9bdb8;
-        color: #812b25;
-    }
-
-    /* FOOTER */
-    .admin-footer {
-        text-align: center;
-        color: #aa9c90;
-        font-size: 11px;
-        padding: 30px 0 5px;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 767px) {
-
-        .admin-sidebar {
-            min-height: auto;
-        }
-
-        .admin-content {
-            padding: 20px 15px;
-        }
-
-        .page-heading {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .welcome-decoration {
-            display: none;
-        }
-
-        .welcome-banner {
-            padding: 23px;
-        }
-
-        .user-info {
-            display: none;
-        }
-
-        .content-card {
-            padding: 16px;
-        }
-    }
+}
 
 </style>
 @endpush
+```
