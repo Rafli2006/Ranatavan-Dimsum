@@ -9,11 +9,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\KasirManagementController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VariantController;
-<<<<<<< HEAD
 use App\Http\Controllers\StockController;
-=======
 use App\Http\Controllers\TransaksiController;
->>>>>>> 15714c4120d7a9ce6ed2b1533c3b23824cb3d4f8
+
 
 // Halaman utama
 Route::get('/', function () {
@@ -57,14 +55,12 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('varian', VariantController::class)
             ->except(['show'])
             ->names('varian');
-<<<<<<< HEAD
+
         Route::get('/stok', [StockController::class, 'index'])
             ->name('stok.index');
         Route::post('/stok/update', [StockController::class, 'updateStock'])
             ->name('stok.update');
-=======
 
->>>>>>> 15714c4120d7a9ce6ed2b1533c3b23824cb3d4f8
         Route::resource('kasir', KasirManagementController::class)
             ->except(['show'])
             ->names('kasir');
