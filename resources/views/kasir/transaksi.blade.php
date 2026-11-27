@@ -31,16 +31,122 @@
 
                 <div class="row g-3">
 
+                    @php
+                        $folderPublik = public_path('images/products');
+                        $daftarFile = [];
+                        if (is_dir($folderPublik)) {
+                            foreach (scandir($folderPublik) ?: [] as $namaFile) {
+                                if ($namaFile !== '.' && $namaFile !== '..' && is_file($folderPublik . DIRECTORY_SEPARATOR . $namaFile)) {
+                                    $daftarFile[] = $namaFile;
+                                }
+                            }
+                        }
+
+                        // Normalisasi spasi ganda / spasi sebelum ekstensi agar file seperti "isi 3 .jpeg" tetap cocok
+                        $normalisasi = function (string $teks): string {
+                            $teks = strtolower($teks);
+                            $teks = preg_replace('/\s*\./', '.', $teks) ?? $teks;
+                            $teks = preg_replace('/\s+/', ' ', $teks) ?? $teks;
+                            return trim($teks);
+                        };
+
+                        $cariFile = function (array $wajib, array $hindari = []) use ($daftarFile, $normalisasi): ?array {
+                            foreach ($daftarFile as $file) {
+                                $low = $normalisasi($file);
+                                foreach ($wajib as $w) {
+                                    $wNorm = $normalisasi($w);
+                                    if ($wNorm !== '' && !str_contains($low, $wNorm)) {
+                                        continue 2;
+                                    }
+                                }
+                                foreach ($hindari as $h) {
+                                    $hNorm = $normalisasi($h);
+                                    if ($hNorm !== '' && str_contains($low, $hNorm)) {
+                                        continue 2;
+                                    }
+                                }
+                                return [
+                                    'filename' => $file,
+                                    'url' => asset('images/products/' . rawurlencode($file)),
+                                ];
+                            }
+                            return null;
+                        };
+                    @endphp
+
                     @forelse($products as $product)
                         @foreach($product->sizes->where('is_active', true) as $size)
+                            @php
+                                $namaProduk = $normalisasi($product->name ?? '');
+                                $namaVarian = $normalisasi($product->variant->name ?? '');
+                                $namaSize = $normalisasi($size->name ?? '');
+                                $pcsAngka = (int) ($size->piece_count ?? 0);
+                                $gabungan = trim($namaProduk . ' ' . $namaVarian . ' ' . $namaSize . ' ' . ($pcsAngka > 0 ? $pcsAngka : ''));
+
+                                $isEnam = str_contains($gabungan, '6')
+                                    || str_contains($gabungan, 'besar')
+                                    || str_contains($gabungan, 'large');
+
+                                $angkaTarget = $isEnam ? '6' : '3';
+                                $angkaLain = $isEnam ? '3' : '6';
+
+                                $hasilFile = null;
+
+                                if (str_contains($gabungan, 'bakar') && str_contains($gabungan, 'mentai')) {
+                                    $hasilFile = $cariFile(['bakar', 'mentai']);
+                                } elseif (str_contains($gabungan, 'bakar')) {
+                                    $hasilFile = $cariFile(['bakar'], ['mentai']);
+                                } elseif (str_contains($gabungan, 'goreng') && str_contains($gabungan, 'mentai')) {
+                                    $hasilFile = $cariFile(['goreng', 'mentai', 'isi ' . $angkaTarget], [$angkaLain])
+                                        ?? $cariFile(['goreng', 'mentai', $angkaTarget], [$angkaLain])
+                                        ?? $cariFile(['goreng', 'mentai']);
+                                } elseif (str_contains($gabungan, 'goreng')) {
+                                    $hasilFile = $cariFile(['goreng', 'isi ' . $angkaTarget], ['mentai', $angkaLain])
+                                        ?? $cariFile(['goreng', $angkaTarget], ['mentai', $angkaLain])
+                                        ?? $cariFile(['goreng'], ['mentai']);
+                                } elseif (str_contains($gabungan, 'mentai')) {
+                                    $hasilFile = $cariFile(['mentai', 'isi ' . $angkaTarget], ['goreng', 'bakar', $angkaLain])
+                                        ?? $cariFile(['mentai', $angkaTarget], ['goreng', 'bakar', $angkaLain]);
+                                } elseif (str_contains($gabungan, 'ori')) {
+                                    $hasilFile = $cariFile(['ori', 'isi ' . $angkaTarget], ['goreng', 'bakar', $angkaLain])
+                                        ?? $cariFile(['ori', $angkaTarget], ['goreng', 'bakar', $angkaLain]);
+                                }
+
+                                $urlGambarTampil = $hasilFile['url']
+                                    ?? ($product->image ? asset('storage/' . $product->image) : null);
+
+                                $hargaSatuan = (float) ($size->price ?? 0);
+                                $stokAngka = (int) ($size->stock ?? 0);
+                                $estimasiPerPcs = $pcsAngka > 0 ? (int) round($hargaSatuan / $pcsAngka) : null;
+                                $nilaiStok = (int) round($hargaSatuan * $stokAngka);
+
+                                if (str_contains($gabungan, 'bakar')) {
+                                    $metodeMasak = 'Dipanggang / Dibakar';
+                                    $saranPenyajian = 'Disajikan hangat langsung setelah dibakar agar aroma smoky keluar maksimal.';
+                                } elseif (str_contains($gabungan, 'goreng')) {
+                                    $metodeMasak = 'Digoreng Crispy';
+                                    $saranPenyajian = 'Nikmat disantap selagi hangat dengan tekstur luar renyah dan isian lembut.';
+                                } else {
+                                    $metodeMasak = 'Dikukus Lembut';
+                                    $saranPenyajian = 'Dikukus fresh sehingga tekstur daging dan kulit tetap lembut dan juicy.';
+                                }
+
+                                if (str_contains($gabungan, 'mentai')) {
+                                    $profilRasa = 'Gurih creamy saus mentai dengan sentuhan savory & sedikit pedas.';
+                                } else {
+                                    $profilRasa = 'Original gurih seimbang khas dimsum yang cocok dipadukan dengan saus.';
+                                }
+
+                                $deskripsiDb = trim((string) ($product->description ?? $product->deskripsi ?? ''));
+                            @endphp
 
                             <div class="col-md-6 col-xl-4">
 
                                 <div class="product-card">
 
                                     <div class="product-image">
-                                        @if($product->image)
-                                            <img src="{{ asset('storage/'.$product->image) }}"
+                                        @if($urlGambarTampil)
+                                            <img src="{{ $urlGambarTampil }}"
                                                  alt="{{ $product->name }}">
                                         @else
                                             <span>🥟</span>
@@ -50,25 +156,19 @@
                                     <div class="product-info">
                                         <h6>{{ $product->name }}</h6>
 
-                                        <p>
-                                            {{ $product->category->name ?? 'Dimsum' }}
-                                            ·
-                                            {{ $product->variant->name ?? '' }}
-                                        </p>
-
                                         <div class="size-info">
                                             {{ $size->name }}
-                                            @if($size->piece_count)
-                                                · {{ $size->piece_count }} pcs
+                                            @if($pcsAngka > 0)
+                                                · {{ $pcsAngka }} pcs
                                             @endif
                                         </div>
 
                                         <strong>
-                                            Rp {{ number_format($size->price, 0, ',', '.') }}
+                                            Rp {{ number_format($hargaSatuan, 0, ',', '.') }}
                                         </strong>
 
                                         <small>
-                                            Stok: {{ $size->stock }}
+                                            Stok: {{ $stokAngka }}
                                         </small>
 
                                         <button
@@ -76,10 +176,20 @@
                                             class="add-product"
                                             data-id="{{ $size->id }}"
                                             data-product="{{ $product->name }}"
+                                            data-category="{{ $product->category->name ?? 'Dimsum' }}"
+                                            data-variant="{{ $product->variant->name ?? '-' }}"
                                             data-size="{{ $size->name }}"
-                                            data-price="{{ $size->price }}"
-                                            data-stock="{{ $size->stock }}"
-                                            {{ $size->stock < 1 ? 'disabled' : '' }}
+                                            data-pcs="{{ $pcsAngka > 0 ? $pcsAngka : 0 }}"
+                                            data-price="{{ $hargaSatuan }}"
+                                            data-per-pcs="{{ $estimasiPerPcs ?? 0 }}"
+                                            data-stock="{{ $stokAngka }}"
+                                            data-stock-value="{{ $nilaiStok }}"
+                                            data-cooking="{{ $metodeMasak }}"
+                                            data-flavor="{{ $profilRasa }}"
+                                            data-serving="{{ $saranPenyajian }}"
+                                            data-image="{{ $urlGambarTampil ?? '' }}"
+                                            data-description="{{ $deskripsiDb }}"
+                                            {{ $stokAngka < 1 ? 'disabled' : '' }}
                                         >
                                             <i class="bi bi-plus-lg"></i>
                                             Tambahkan
@@ -146,6 +256,86 @@
 
     </div>
 
+</div>
+
+{{-- MODAL DETAIL SAAT MENCET TAMBAHKAN --}}
+<div id="product-detail-modal" class="product-modal-backdrop" aria-hidden="true">
+    <div class="product-modal-card" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title">
+        <div class="product-modal-header">
+            <div>
+                <span class="header-label">DETAIL PRODUK</span>
+                <h5 id="detail-modal-title">Nama Produk</h5>
+                <div id="detail-subtitle" class="detail-subtitle">-</div>
+            </div>
+            <button type="button" id="close-detail-modal" class="close-modal-btn" aria-label="Tutup">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="product-modal-body">
+            <div id="detail-modal-media" class="detail-modal-media">
+                <span>🥟</span>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">Analisis Porsi & Stok</div>
+                <div class="detail-stats-grid">
+                    <div class="detail-stat-box">
+                        <span>Harga Satuan</span>
+                        <strong id="detail-price-text">Rp 0</strong>
+                    </div>
+                    <div class="detail-stat-box">
+                        <span>Estimasi / Pcs</span>
+                        <strong id="detail-per-pcs">-</strong>
+                    </div>
+                    <div class="detail-stat-box">
+                        <span>Stok Tersedia</span>
+                        <strong id="detail-stock-text">0</strong>
+                    </div>
+                    <div class="detail-stat-box">
+                        <span>Total Nilai Stok</span>
+                        <strong id="detail-stock-value">Rp 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">Karakteristik & Penyajian</div>
+                <div class="detail-list-card">
+                    <div class="detail-list-row">
+                        <span>Metode Olahan</span>
+                        <strong id="detail-cooking">-</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Profil Rasa</span>
+                        <strong id="detail-flavor">-</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Saran Penyajian</span>
+                        <strong id="detail-serving">-</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detail-db-desc-wrap" class="detail-section" style="display:none;">
+                <div class="detail-section-title">Catatan Produk</div>
+                <div class="detail-note-box">
+                    <p id="detail-db-desc">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-modal-footer">
+            <button type="button" id="back-to-products-btn" class="secondary-modal-btn">
+                <i class="bi bi-arrow-left"></i>
+                Kembali ke Pilihan Produk
+            </button>
+            <button type="button" id="detail-add-to-cart" class="primary-modal-btn">
+                <i class="bi bi-plus-lg"></i>
+                Tambahkan
+            </button>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -242,6 +432,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    mix-blend-mode: multiply;
 }
 
 .product-image span {
@@ -256,12 +447,6 @@
     font-size: 13px;
     font-weight: 800;
     margin-bottom: 5px;
-}
-
-.product-info p {
-    font-size: 10px;
-    color: #a18d7d;
-    margin-bottom: 8px;
 }
 
 .size-info {
@@ -292,6 +477,7 @@
     font-size: 11px;
     font-weight: 800;
     margin-top: 12px;
+    cursor: pointer;
 }
 
 .add-product:hover:not(:disabled) {
@@ -419,6 +605,218 @@
     margin-top: 9px;
 }
 
+/* Modal Detail Produk */
+.product-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(45, 25, 10, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 1050;
+}
+
+.product-modal-backdrop.is-open {
+    display: flex;
+}
+
+.product-modal-card {
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #f1e5da;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(60, 30, 10, 0.22);
+    color: #573923;
+}
+
+.product-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border-bottom: 1px solid #f3e8de;
+}
+
+.product-modal-header h5 {
+    margin: 4px 0 3px;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.detail-subtitle {
+    font-size: 11px;
+    color: #9b6b47;
+    font-weight: 600;
+}
+
+.close-modal-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #f0dfd0;
+    border-radius: 9px;
+    background: #fff8f2;
+    color: #75452b;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.product-modal-body {
+    padding: 18px 20px;
+}
+
+.detail-modal-media {
+    min-height: 220px;
+    padding: 14px;
+    border-radius: 13px;
+    background: #fff0e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.detail-modal-media img {
+    max-width: 100% !important;
+    max-height: 235px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block;
+    mix-blend-mode: multiply;
+}
+
+.detail-modal-media span {
+    font-size: 56px;
+}
+
+.detail-section {
+    margin-bottom: 14px;
+}
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.detail-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #e97927;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 8px;
+}
+
+.detail-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.detail-stat-box {
+    background: #fffaf5;
+    border: 1px solid #f3e7dc;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.detail-stat-box span {
+    display: block;
+    font-size: 10px;
+    color: #9f8b7b;
+    margin-bottom: 3px;
+}
+
+.detail-stat-box strong {
+    font-size: 13px;
+    font-weight: 800;
+    color: #573923;
+}
+
+.detail-list-card {
+    background: #fffaf5;
+    border: 1px solid #f3e7dc;
+    border-radius: 11px;
+    padding: 4px 12px;
+}
+
+.detail-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px dashed #eddcc9;
+    font-size: 12px;
+}
+
+.detail-list-row:last-child {
+    border-bottom: none;
+}
+
+.detail-list-row span {
+    color: #968171;
+    flex-shrink: 0;
+}
+
+.detail-list-row strong {
+    text-align: right;
+    color: #573923;
+    font-weight: 700;
+}
+
+.detail-note-box {
+    background: #fff7ef;
+    border: 1px solid #f0dfd0;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.detail-note-box p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.product-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px 18px;
+    border-top: 1px solid #f3e8de;
+}
+
+.secondary-modal-btn,
+.primary-modal-btn {
+    padding: 10px 15px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.secondary-modal-btn {
+    background: #fff5ec;
+    border: 1px solid #edd9c8;
+    color: #75452b;
+}
+
+.primary-modal-btn {
+    background: #ed792a;
+    border: none;
+    color: #ffffff;
+}
+
+.primary-modal-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
 @media(max-width: 768px) {
     .transaction-page {
         padding: 15px;
@@ -432,6 +830,19 @@
     .cart-panel {
         position: static;
     }
+
+    .detail-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-list-row {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .detail-list-row strong {
+        text-align: left;
+    }
 }
 </style>
 
@@ -439,11 +850,15 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const cart = {};
+    let selectedProductItem = null;
 
     const rupiah = number =>
         'Rp ' + Number(number).toLocaleString('id-ID');
 
     const cartItems = document.getElementById('cart-items');
+    const detailModal = document.getElementById('product-detail-modal');
+    const detailMedia = document.getElementById('detail-modal-media');
+    const detailAddButton = document.getElementById('detail-add-to-cart');
 
     function renderCart() {
 
@@ -513,31 +928,119 @@ document.addEventListener('DOMContentLoaded', function () {
         })[char]);
     }
 
+    function addToCart(payload) {
+        const id = String(payload.id);
+        const stock = Number(payload.stock);
+
+        if (!cart[id]) {
+            cart[id] = {
+                id: id,
+                name: payload.product,
+                size: payload.size,
+                price: Number(payload.price),
+                stock: stock,
+                quantity: 0
+            };
+        }
+
+        if (cart[id].quantity >= stock) {
+            alert('Jumlah melebihi stok yang tersedia.');
+            return false;
+        }
+
+        cart[id].quantity++;
+        renderCart();
+        return true;
+    }
+
+    function openDetailAndAddModal(buttonEl) {
+        const dataset = buttonEl.dataset;
+        const cardImg = buttonEl.closest('.product-card')?.querySelector('.product-image img');
+        const resolvedImageUrl = (cardImg && cardImg.getAttribute('src'))
+            ? cardImg.getAttribute('src')
+            : (dataset.image || '');
+
+        selectedProductItem = {
+            id: dataset.id,
+            product: dataset.product,
+            size: dataset.size,
+            price: Number(dataset.price),
+            stock: Number(dataset.stock)
+        };
+
+        const pcsNum = Number(dataset.pcs || 0);
+        const perPcsNum = Number(dataset.perPcs || 0);
+        const stockNum = Number(dataset.stock || 0);
+        const stockValueNum = Number(dataset.stockValue || 0);
+
+        document.getElementById('detail-modal-title').textContent = dataset.product || 'Detail Produk';
+        document.getElementById('detail-subtitle').textContent =
+            `${dataset.category || 'Dimsum'} · Varian ${dataset.variant || '-'} · ${dataset.size || '-'}${pcsNum > 0 ? ' (' + pcsNum + ' pcs)' : ''}`;
+
+        document.getElementById('detail-price-text').textContent = rupiah(dataset.price || 0);
+        document.getElementById('detail-per-pcs').textContent =
+            perPcsNum > 0 ? `~${rupiah(perPcsNum)}` : 'Per porsi';
+        document.getElementById('detail-stock-text').textContent =
+            stockNum > 0 ? `${stockNum} pcs/porsi` : 'Habis (0)';
+        document.getElementById('detail-stock-value').textContent = rupiah(stockValueNum);
+
+        document.getElementById('detail-cooking').textContent = dataset.cooking || '-';
+        document.getElementById('detail-flavor').textContent = dataset.flavor || '-';
+        document.getElementById('detail-serving').textContent = dataset.serving || '-';
+
+        const descWrap = document.getElementById('detail-db-desc-wrap');
+        const descText = document.getElementById('detail-db-desc');
+        if (dataset.description && dataset.description.trim() !== '') {
+            descText.textContent = dataset.description.trim();
+            descWrap.style.display = 'block';
+        } else {
+            descWrap.style.display = 'none';
+        }
+
+        if (resolvedImageUrl) {
+            detailMedia.innerHTML = `<img src="${escapeHtml(resolvedImageUrl)}" alt="${escapeHtml(dataset.product || '')}">`;
+        } else {
+            detailMedia.innerHTML = `<span>🥟</span>`;
+        }
+
+        detailAddButton.disabled = stockNum < 1;
+        detailModal.classList.add('is-open');
+        detailModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function backToProductList() {
+        detailModal.classList.remove('is-open');
+        detailModal.setAttribute('aria-hidden', 'true');
+        selectedProductItem = null;
+    }
+
     document.querySelectorAll('.add-product').forEach(button => {
         button.addEventListener('click', function () {
-
-            const id = this.dataset.id;
-            const stock = Number(this.dataset.stock);
-
-            if (!cart[id]) {
-                cart[id] = {
-                    id: id,
-                    name: this.dataset.product,
-                    size: this.dataset.size,
-                    price: Number(this.dataset.price),
-                    stock: stock,
-                    quantity: 0
-                };
-            }
-
-            if (cart[id].quantity >= stock) {
-                alert('Jumlah melebihi stok yang tersedia.');
-                return;
-            }
-
-            cart[id].quantity++;
-            renderCart();
+            openDetailAndAddModal(this);
         });
+    });
+
+    detailAddButton.addEventListener('click', function () {
+        if (!selectedProductItem) return;
+        const added = addToCart(selectedProductItem);
+        if (added) {
+            backToProductList();
+        }
+    });
+
+    document.getElementById('back-to-products-btn').addEventListener('click', backToProductList);
+    document.getElementById('close-detail-modal').addEventListener('click', backToProductList);
+
+    detailModal.addEventListener('click', function (event) {
+        if (event.target === detailModal) {
+            backToProductList();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && detailModal.classList.contains('is-open')) {
+            backToProductList();
+        }
     });
 
     cartItems.addEventListener('click', function (event) {
